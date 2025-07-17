@@ -105,7 +105,7 @@ ul.pdf-list li a:hover {
 }
 
 .schedule-box.in-view {
-  animation: fadeSlideUp 1.2s ease forwards;
+  animation: fadeSlideUp 2s ease forwards;
 }
 
 @keyframes fadeSlideUp {
