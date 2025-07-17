@@ -108,11 +108,7 @@ ul.pdf-list li a:hover {
   }
 
   .schedule-container {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .schedule-box {
-    min-width: 100%;
+    display: grid; /* keep grid */
+    grid-template-columns: 1fr; /* single column */
   }
 }
