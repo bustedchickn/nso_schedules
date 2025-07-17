@@ -44,17 +44,34 @@
     </ul>
   </main>
   <script>
-  // Only run this on mobile screens
-  window.addEventListener('DOMContentLoaded', () => {
-    if (window.innerWidth <= 600) {
-      const firstBox = document.querySelector('.schedule-box');
-      if (firstBox) {
-        firstBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        firstBox.classList.add('highlight');
+    // Your scroll highlight for first card — keep it!
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.innerWidth <= 782) {
+        const firstBox = document.querySelector('.schedule-box');
+        if (firstBox) {
+          firstBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          firstBox.classList.add('highlight');
+        }
       }
-    }
-  });
-</script>
+    });
+
+    // New Intersection Observer
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('lift');
+        } else {
+          entry.target.classList.remove('lift');
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    document.querySelectorAll('.schedule-box').forEach(box => {
+      observer.observe(box);
+    });
+  </script>
 
 </body>
 </html>

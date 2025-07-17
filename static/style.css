@@ -97,9 +97,15 @@ ul.pdf-list li a:hover {
   body {
     margin: 1rem;
   }
+  .schedule-box.lift {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
 
   input[type="text"] {
     width: 100%;
+    box-sizing: border-box; /* ensures padding stays inside */
   }
 
   button {
@@ -108,7 +114,11 @@ ul.pdf-list li a:hover {
   }
 
   .schedule-container {
-    display: grid; /* keep grid */
-    grid-template-columns: 1fr; /* single column */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .schedule-box {
+    min-width: 100%;
   }
 }
