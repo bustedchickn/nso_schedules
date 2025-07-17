@@ -1,38 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>NSO Schedule</title>
+  <meta charset="UTF-8" />
+  <title>Employee Schedule</title>
+  <!-- Google Font: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- Link your external stylesheet -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-  <h1>Find Your Schedule</h1>
-  <form method="post">
-    <input type="text" name="name" placeholder="Enter your name" required>
-    <button type="submit">Search</button>
-  </form>
 
-  {% if schedule %}
-    <h2>Schedule for {{ name.title() }}</h2>
-    <ul>
-      {% for key, value in schedule.items() %}
-        {% if key != 'Names' %}
-          <li><strong>{{ key }}:</strong> {{ value }}</li>
-        {% endif %}
+<body>
+  <main>
+    <h1>Find Your Schedule</h1>
+    <form method="post">
+      <input type="text" name="name" placeholder="Enter your name" required />
+      <button type="submit">Search</button>
+    </form>
+
+    {% if schedule %}
+      <h2>Schedule for {{ name.title() }}</h2>
+      <div class="schedule-container">
+        {% for key, value in schedule.items() %}
+          {% if key != 'Names' %}
+            <div class="schedule-box">
+              <strong>{{ key }}</strong>
+              <span>{{ value }}</span>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% elif name %}
+      <p>No schedule found for "{{ name }}"</p>
+    {% endif %}
+
+    <h2>Available PDFs</h2>
+    <ul class="pdf-list">
+      {% for pdf in pdfs %}
+        <li><a href="{{ url_for('pdfs', filename=pdf) }}" target="_blank">{{ pdf }}</a></li>
       {% endfor %}
     </ul>
-  {% elif name %}
-    <p>No schedule found for "{{ name }}"</p>
-  {% endif %}
-
-  <h2>Available PDFs</h2>
-  <ul>
-    {% for pdf in pdfs %}
-      <li><a href="{{ url_for('pdfs', filename=pdf) }}" target="_blank">{{ pdf }}</a></li>
-    {% endfor %}
-  </ul>
+  </main>
 </body>
 </html>
