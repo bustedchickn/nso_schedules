@@ -1,0 +1,96 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 2rem;
+  background-color: #f9f9f9;
+}
+
+form {
+  margin-bottom: 2rem;
+}
+
+input[type="text"] {
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.schedule-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.schedule-box {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  min-width: 150px;
+  flex: 1 1 200px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-box strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+ul.pdf-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+ul.pdf-list li {
+  margin-bottom: 0.5rem;
+}
+
+ul.pdf-list li a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+ul.pdf-list li a:hover {
+  text-decoration: underline;
+}
+
+/* ✅ Mobile styles */
+@media (max-width: 600px) {
+  body {
+    margin: 1rem;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .schedule-container {
+    flex-direction: column;
+  }
+
+  .schedule-box {
+    min-width: 100%;
+  }
+}
