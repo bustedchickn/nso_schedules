@@ -44,34 +44,37 @@
     </ul>
   </main>
   <script>
-    // Your scroll highlight for first card — keep it!
+    // Highlight first card on mobile - keep this part
     window.addEventListener('DOMContentLoaded', () => {
-      if (window.innerWidth <= 782) {
+        if (window.innerWidth <= 782) {
         const firstBox = document.querySelector('.schedule-box');
         if (firstBox) {
-          firstBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          firstBox.classList.add('highlight');
+            firstBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            firstBox.classList.add('highlight');
         }
-      }
-    });
-
-    // New Intersection Observer
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('lift');
-        } else {
-          entry.target.classList.remove('lift');
         }
-      });
-    }, {
-      threshold: 0.1
-    });
 
-    document.querySelectorAll('.schedule-box').forEach(box => {
-      observer.observe(box);
+        // Observer for fade-in and lift
+        const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            entry.target.classList.add('lift');
+            } else {
+            entry.target.classList.remove('lift');
+            // DO NOT remove .in-view — so it only animates once!
+            }
+        });
+        }, {
+        threshold: 0.1
+        });
+
+        document.querySelectorAll('.schedule-box').forEach(box => {
+        observer.observe(box);
+        });
     });
-  </script>
+    </script>
+
 
 </body>
 </html>
