@@ -15,7 +15,7 @@
     <h2>Schedule for {{ name.title() }}</h2>
     <ul>
       {% for key, value in schedule.items() %}
-        {% if key != 'Name' %}
+        {% if key != 'Names' %}
           <li><strong>{{ key }}:</strong> {{ value }}</li>
         {% endif %}
       {% endfor %}
