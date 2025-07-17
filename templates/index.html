@@ -42,5 +42,18 @@
       {% endfor %}
     </ul>
   </main>
+  <script>
+  // Only run this on mobile screens
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.innerWidth <= 600) {
+      const firstBox = document.querySelector('.schedule-box');
+      if (firstBox) {
+        firstBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        firstBox.classList.add('highlight');
+      }
+    }
+  });
+</script>
+
 </body>
 </html>

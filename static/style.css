@@ -82,6 +82,17 @@ ul.pdf-list li a:hover {
   text-decoration: underline;
 }
 
+/* Add a highlight effect */
+.schedule-box.highlight {
+  animation: highlightFade 2s ease forwards;
+}
+
+@keyframes highlightFade {
+  0% { background-color: #ffffcc; }
+  100% { background-color: white; }
+}
+
+
 @media (max-width: 600px) {
   body {
     margin: 1rem;
@@ -94,5 +105,14 @@ ul.pdf-list li a:hover {
   button {
     width: 100%;
     margin-top: 0.5rem;
+  }
+
+  .schedule-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .schedule-box {
+    min-width: 100%;
   }
 }
