@@ -14,11 +14,11 @@ def index():
     name = None
 
     if request.method == 'POST':
-        name = request.form['Names'].strip().lower()
+        name = request.form['Name'].strip().lower()
         df = pd.read_excel(EXCEL_FILE)
 
         # Make columns lowercase for matching
-        df['Name_lower'] = df['Name'].str.lower()
+        df['Name_lower'] = df['Names'].str.lower()
 
         match = df[df['Name_lower'] == name]
 
