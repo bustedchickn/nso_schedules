@@ -14,7 +14,7 @@ def index():
     name = None
 
     if request.method == 'POST':
-        name = request.form['Name'].strip().lower()
+        name = request.form['name'].strip().lower()
         df = pd.read_excel(EXCEL_FILE)
 
         # Make columns lowercase for matching
