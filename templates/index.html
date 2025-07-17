@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Schedule</title>
+</head>
+<body>
+  <h1>Find Your Schedule</h1>
+  <form method="post">
+    <input type="text" name="name" placeholder="Enter your name" required>
+    <button type="submit">Search</button>
+  </form>
+
+  {% if schedule %}
+    <h2>Schedule for {{ name.title() }}</h2>
+    <ul>
+      {% for key, value in schedule.items() %}
+        {% if key != 'Name' %}
+          <li><strong>{{ key }}:</strong> {{ value }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% elif name %}
+    <p>No schedule found for "{{ name }}"</p>
+  {% endif %}
+
+  <h2>Available PDFs</h2>
+  <ul>
+    {% for pdf in pdfs %}
+      <li><a href="{{ url_for('pdfs', filename=pdf) }}" target="_blank">{{ pdf }}</a></li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
