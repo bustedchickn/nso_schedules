@@ -105,7 +105,7 @@ ul.pdf-list li a:hover {
 }
 
 .schedule-box.in-view {
-  animation: fadeSlideUp 0.6s ease forwards;
+  animation: fadeSlideUp 1.2s ease forwards;
 }
 
 @keyframes fadeSlideUp {
@@ -148,5 +148,6 @@ ul.pdf-list li a:hover {
 
   .schedule-box {
     min-width: 100%;
+    box-sizing: border-box;
   }
 }

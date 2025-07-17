@@ -44,7 +44,6 @@
     </ul>
   </main>
   <script>
-    // Highlight first card on mobile - keep this part
     window.addEventListener('DOMContentLoaded', () => {
         if (window.innerWidth <= 782) {
         const firstBox = document.querySelector('.schedule-box');
@@ -54,7 +53,6 @@
         }
         }
 
-        // Observer for fade-in and lift
         const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -62,11 +60,11 @@
             entry.target.classList.add('lift');
             } else {
             entry.target.classList.remove('lift');
-            // DO NOT remove .in-view — so it only animates once!
             }
         });
         }, {
-        threshold: 0.1
+        threshold: 0.5, // 50% of the element must be visible
+        rootMargin: '-25% 0px -25% 0px' // push detection closer to center
         });
 
         document.querySelectorAll('.schedule-box').forEach(box => {
@@ -74,6 +72,7 @@
         });
     });
     </script>
+
 
 
 </body>
