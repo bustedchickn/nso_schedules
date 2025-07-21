@@ -39,9 +39,20 @@
     <h2>Available PDFs</h2>
     <ul class="pdf-list">
       {% for pdf in pdfs %}
-        <li><a href="{{ url_for('pdfs', filename=pdf) }}" target="_blank">{{ pdf }}</a></li>
+        <li>
+          <h3>{{ pdf }}</h3>
+          <div class="pdf-container">
+            <iframe 
+              src="{{ url_for('pdfs', filename=pdf) }}" 
+              width="100%" 
+              height="500px"
+              style="border: 1px solid #ccc;">
+            </iframe>
+          </div>
+        </li>
       {% endfor %}
     </ul>
+
   </main>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
