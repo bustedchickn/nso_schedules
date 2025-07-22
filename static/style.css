@@ -2,15 +2,20 @@
 html, body {
   height: 100%;
   margin: 0;
-}
-
-body {
+  font-family: 'Inter', Arial, sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
   display: flex;
   flex-direction: column;
 }
 
+.container {
+  flex: 1; /* This makes the content area fill space */
+  margin: 2rem; /* Your side margin */
+}
+
 main {
-  flex: 1; /* Fills vertical space */
+  width: 100%;
 }
 
 .footer {
@@ -185,6 +190,9 @@ canvas {
     margin-top: 0.5rem;
     background-color: rgb(0, 110, 182, .8);
   }
+  .container {
+  margin: 1rem; /* Your side margin */
+}
   .pdf-controls {
   display: flex;
   justify-content: space-between;
