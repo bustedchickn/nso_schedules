@@ -13,6 +13,25 @@ h1, h2 {
 form {
   margin-bottom: 2rem;
 }
+.footer {
+  background-color: rgb(30, 113, 179);
+  border-radius: 5px;
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: auto;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.byuilogo {
+  height: 60px;
+  width: auto;
+  align-items: center;
+
+}
 
 input[type="text"] {
   padding: 0.75rem;
@@ -27,7 +46,7 @@ button {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   border: none;
-  background-color: #007bff;
+  background-color: rgb(0, 109, 182);
   color: white;
   border-radius: 6px;
   cursor: pointer;
@@ -35,7 +54,7 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: rgb(0, 110, 182, .8);
 }
 
 .schedule-container {
@@ -159,6 +178,7 @@ canvas {
   button {
     width: 100%;
     margin-top: 0.5rem;
+    background-color: rgb(0, 110, 182, .8);
   }
   .pdf-controls {
   display: flex;
