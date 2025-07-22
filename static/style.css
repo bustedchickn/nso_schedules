@@ -1,9 +1,12 @@
 /* Google Fonts - you’ll link this in HTML */
 body {
   font-family: 'Inter', Arial, sans-serif;
-  margin: 2rem;
   background-color: #f5f7fa;
   color: #333;
+}
+
+#content {
+  margin: 2rem;
 }
 
 h1, h2 {
