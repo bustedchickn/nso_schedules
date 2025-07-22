@@ -162,18 +162,25 @@ canvas {
   }
   .pdf-controls {
   display: flex;
-  justify-content: space-between; /* Distribute evenly with space between */
-  flex-wrap: wrap; /* Optional: wrap on small screens if needed */
-  gap: 0.5rem; /* Space between buttons */
-  margin: 1rem 0; /* Some spacing above/below */
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  width: 100%;
 }
 
 .pdf-controls button {
-  flex: 1; /* Let buttons grow equally */
+  flex: 1;
+  margin: 0 0.25rem; /* Optional: side margin between buttons */
   padding: 0.5rem;
   text-align: center;
-  min-width: 80px; /* Optional: minimum width per button */
 }
+
+.pdf-controls button:first-child {
+  margin-left: 0; /* Remove first margin for neat edges */
+}
+.pdf-controls button:last-child {
+  margin-right: 0; /* Remove last margin */
+}
+
 
   .schedule-container {
     display: flex;
