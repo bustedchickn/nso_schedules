@@ -45,22 +45,22 @@
     <h2>Available PDFs</h2>
 <ul class="pdf-list">
   {% for pdf in pdfs %}
-    <li>
-      <h3>{{ pdf }}</h3>
-      <div class="pdf-container">
-        <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
-        <div class="pdf-controls">
-          <button onclick="prevPage({{ loop.index }})">Previous</button>
-          <button onclick="nextPage({{ loop.index }})">Next</button>
-          <span id="page-num-{{ loop.index }}">Page 1</span> / 
-          <span id="page-count-{{ loop.index }}"></span>
-          <button onclick="zoomIn({{ loop.index }})">Zoom In</button>
-          <button onclick="zoomOut({{ loop.index }})">Zoom Out</button>
-        </div>
-        <p><a href="{{ url_for('pdfs', filename=pdf) }}" download>Download PDF</a></p>
+  <li>
+    <h3>{{ pdf }}</h3>
+    <div class="pdf-container">
+      <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
+      <div class="pdf-controls">
+        <button onclick="prevPage({{ loop.index }})">Previous</button>
+        <button onclick="nextPage({{ loop.index }})">Next</button>
+        <span id="page-num-{{ loop.index }}">Page 1</span> /
+        <span id="page-count-{{ loop.index }}"></span>
+        <button onclick="zoomIn({{ loop.index }})">Zoom In</button>
+        <button onclick="zoomOut({{ loop.index }})">Zoom Out</button>
       </div>
-    </li>
-  {% endfor %}
+    </div>
+  </li>
+{% endfor %}
+
 </ul>
 
 <script>
@@ -87,6 +87,38 @@
         pdfStates[pdfIndex].pdfDoc = pdfDoc_;
         document.getElementById('page-count-' + pdfIndex).textContent = pdfDoc_.numPages;
         renderPage(pdfIndex, pdfStates[pdfIndex].pageNum);
+      });
+
+      // ✅ Click for prev/next:
+      canvas.addEventListener('click', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+
+        if (clickX < rect.width / 2) {
+          prevPage(pdfIndex);
+        } else {
+          nextPage(pdfIndex);
+        }
+      });
+
+      // ✅ Swipe for prev/next:
+      let touchStartX = 0;
+
+      canvas.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+      });
+
+      canvas.addEventListener('touchend', function(e) {
+        const touchEndX = e.changedTouches[0].screenX;
+        const diff = touchEndX - touchStartX;
+
+        if (Math.abs(diff) > 50) { // threshold to detect swipe
+          if (diff > 0) {
+            prevPage(pdfIndex); // swipe right → go left
+          } else {
+            nextPage(pdfIndex); // swipe left → go right
+          }
+        }
       });
     })();
   {% endfor %}
@@ -155,6 +187,7 @@
     queueRenderPage(pdfIndex, state.pageNum);
   }
 </script>
+
 
 
 
