@@ -192,6 +192,12 @@ canvas {
     width: 100%;
     margin-top: 0.5rem;
   }
+  .pdf-controls button {
+    flex: 1;
+    margin: 0 0.25rem; /* Optional: side margin between buttons */
+    padding: 0.5rem;
+    text-align: center;
+  }
 
   .schedule-container {
     display: flex;
