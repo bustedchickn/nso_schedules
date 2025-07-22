@@ -9,7 +9,7 @@ html, body {
   flex-direction: column;
 }
 
-.container {
+.content {
   flex: 1; /* This makes the content area fill space */
   margin: 2rem; /* Your side margin */
 }
@@ -190,7 +190,7 @@ canvas {
     margin-top: 0.5rem;
     background-color: rgb(0, 110, 182, .8);
   }
-  .container {
+  .content {
   margin: 1rem; /* Your side margin */
 }
   .pdf-controls {
