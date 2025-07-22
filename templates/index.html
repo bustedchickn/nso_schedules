@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <!-- Link your external stylesheet -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 
 <body>
@@ -47,6 +47,7 @@
             <p><a href="{{ url_for('pdfs', filename=pdf) }}" download>Download PDF</a></p>
           </div>
           <script>
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
             const url = "{{ url_for('pdfs', filename=pdf) }}";
             const canvas = document.getElementById("pdf-canvas-{{ loop.index }}");
             const context = canvas.getContext('2d');
