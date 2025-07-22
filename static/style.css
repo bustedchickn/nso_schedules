@@ -1,15 +1,26 @@
 /* Google Fonts - you’ll link this in HTML */
-body {
+html, body {
+  height: 100%;
   margin: 0;
-  width: 100%;
-  font-family: 'Inter', Arial, sans-serif;
-  background-color: #f5f7fa;
-  color: #333;
 }
 
-#content {
-  margin: 2rem;
+body {
+  display: flex;
+  flex-direction: column;
 }
+
+main {
+  flex: 1; /* Fills vertical space */
+}
+
+.footer {
+  background-color: rgb(30, 113, 179);
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+  color: white;
+}
+
 
 h1, h2 {
   font-weight: 600;
@@ -18,18 +29,7 @@ h1, h2 {
 form {
   margin-bottom: 2rem;
 }
-.footer {
-  background-color: rgb(30, 113, 179);
-  border-radius: 5px;
-  width: 100%;
-  text-align: center;
-  padding: 20px 0;
-  margin-top: auto;
-  position: relative;
-  bottom: 0;
-  left: 0;
-  z-index: 1000;
-}
+
 
 .byuilogo {
   height: 60px;
