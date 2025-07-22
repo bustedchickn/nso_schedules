@@ -1,5 +1,7 @@
 /* Google Fonts - you’ll link this in HTML */
 body {
+  margin: 0;
+  width: 100%;
   font-family: 'Inter', Arial, sans-serif;
   background-color: #f5f7fa;
   color: #333;
