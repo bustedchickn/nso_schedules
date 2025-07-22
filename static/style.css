@@ -87,6 +87,26 @@ ul.pdf-list li a:hover {
   animation: highlightFade 2s ease forwards;
 }
 
+.pdf-container {
+  margin-bottom: 2rem;
+}
+
+canvas {
+  border: 1px solid #ccc;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.pdf-controls {
+  margin: 0.5rem 0;
+}
+
+.pdf-controls button {
+  margin-right: 0.5rem;
+}
+
+
 @keyframes highlightFade {
   0% { background-color: #ffffcc; }
   100% { background-color: white; }
