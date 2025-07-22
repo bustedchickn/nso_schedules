@@ -162,6 +162,7 @@ canvas {
   }
   .pdf-controls button {
     width: fit-content;
+    padding: .5rem;
 }
 
   .schedule-container {
