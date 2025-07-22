@@ -10,7 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <!-- Link your external stylesheet -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- PDF.js from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+</script>
+
 </head>
 
 <body>
@@ -38,38 +43,120 @@
     {% endif %}
 
     <h2>Available PDFs</h2>
-    <ul class="pdf-list">
-      {% for pdf in pdfs %}
-        <li>
-          <h3>{{ pdf }}</h3>
-          <div class="pdf-container">
-            <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
-            <p><a href="{{ url_for('pdfs', filename=pdf) }}" download>Download PDF</a></p>
-          </div>
-          <script>
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-            const url = "{{ url_for('pdfs', filename=pdf) }}";
-            const canvas = document.getElementById("pdf-canvas-{{ loop.index }}");
-            const context = canvas.getContext('2d');
+<ul class="pdf-list">
+  {% for pdf in pdfs %}
+    <li>
+      <h3>{{ pdf }}</h3>
+      <div class="pdf-container">
+        <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
+        <div class="pdf-controls">
+          <button onclick="prevPage({{ loop.index }})">Previous</button>
+          <button onclick="nextPage({{ loop.index }})">Next</button>
+          <span id="page-num-{{ loop.index }}">Page 1</span> / 
+          <span id="page-count-{{ loop.index }}"></span>
+          <button onclick="zoomIn({{ loop.index }})">Zoom In</button>
+          <button onclick="zoomOut({{ loop.index }})">Zoom Out</button>
+        </div>
+        <p><a href="{{ url_for('pdfs', filename=pdf) }}" download>Download PDF</a></p>
+      </div>
+    </li>
+  {% endfor %}
+</ul>
 
-            pdfjsLib.getDocument(url).promise.then(function(pdf) {
-              // Get first page
-              pdf.getPage(1).then(function(page) {
-                const viewport = page.getViewport({ scale: 1.5 });
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
+<script>
+  const pdfStates = {};
 
-                const renderContext = {
-                  canvasContext: context,
-                  viewport: viewport
-                };
-                page.render(renderContext);
-              });
-            });
-          </script>
-        </li>
-      {% endfor %}
-    </ul>
+  {% for pdf in pdfs %}
+    (function() {
+      const pdfIndex = {{ loop.index }};
+      const url = "{{ url_for('pdfs', filename=pdf) }}";
+      const canvas = document.getElementById('pdf-canvas-' + pdfIndex);
+      const context = canvas.getContext('2d');
+
+      pdfStates[pdfIndex] = {
+        pdfDoc: null,
+        pageNum: 1,
+        pageRendering: false,
+        pageNumPending: null,
+        scale: 1.0,
+        canvas: canvas,
+        context: context
+      };
+
+      pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+        pdfStates[pdfIndex].pdfDoc = pdfDoc_;
+        document.getElementById('page-count-' + pdfIndex).textContent = pdfDoc_.numPages;
+        renderPage(pdfIndex, pdfStates[pdfIndex].pageNum);
+      });
+    })();
+  {% endfor %}
+
+  function renderPage(pdfIndex, num) {
+    const state = pdfStates[pdfIndex];
+    state.pageRendering = true;
+
+    state.pdfDoc.getPage(num).then(function(page) {
+      const viewport = page.getViewport({ scale: state.scale });
+      state.canvas.height = viewport.height;
+      state.canvas.width = viewport.width;
+
+      const renderContext = {
+        canvasContext: state.context,
+        viewport: viewport
+      };
+
+      const renderTask = page.render(renderContext);
+
+      renderTask.promise.then(function() {
+        state.pageRendering = false;
+
+        if (state.pageNumPending !== null) {
+          renderPage(pdfIndex, state.pageNumPending);
+          state.pageNumPending = null;
+        }
+      });
+
+      document.getElementById('page-num-' + pdfIndex).textContent = num;
+    });
+  }
+
+  function queueRenderPage(pdfIndex, num) {
+    const state = pdfStates[pdfIndex];
+    if (state.pageRendering) {
+      state.pageNumPending = num;
+    } else {
+      renderPage(pdfIndex, num);
+    }
+  }
+
+  function prevPage(pdfIndex) {
+    const state = pdfStates[pdfIndex];
+    if (state.pageNum <= 1) return;
+    state.pageNum--;
+    queueRenderPage(pdfIndex, state.pageNum);
+  }
+
+  function nextPage(pdfIndex) {
+    const state = pdfStates[pdfIndex];
+    if (state.pageNum >= state.pdfDoc.numPages) return;
+    state.pageNum++;
+    queueRenderPage(pdfIndex, state.pageNum);
+  }
+
+  function zoomIn(pdfIndex) {
+    const state = pdfStates[pdfIndex];
+    state.scale = Math.min(state.scale + 0.2, 3.0);
+    queueRenderPage(pdfIndex, state.pageNum);
+  }
+
+  function zoomOut(pdfIndex) {
+    const state = pdfStates[pdfIndex];
+    state.scale = Math.max(state.scale - 0.2, 0.5);
+    queueRenderPage(pdfIndex, state.pageNum);
+  }
+</script>
+
+
 
 
   </main>
