@@ -33,7 +33,17 @@
       <div class="schedule-container">
         {% for key, value in schedule.items() %}
           {% if key != 'Color' %}
-            <div class="schedule-box" style="border-left: 6px solid {{ schedule.Color | default('#FFFFFF') }};"
+            <div class="schedule-box" style=" {% if user_color == '#FFFFFF' %}
+         border-left: 6px solid repeating-linear-gradient(
+           45deg,
+           #f0f0f0,
+           #f0f0f0 10px,
+           #ffffff 10px,
+           #ffffff 20px
+         );
+         border: 2px solid #ccc;
+       {% else %}
+        {{ schedule.Color | default('#FFFFFF') }};"
                 {% if schedule.Color %}
                   style="background-color: {{ schedule.Color }};"
                 {% endif %}>
