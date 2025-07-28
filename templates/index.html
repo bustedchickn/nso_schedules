@@ -32,14 +32,10 @@
       <h2>Schedule for {{ name.title() }}</h2>
       <div class="schedule-container">
         {% for key, value in schedule.items() %}
-          {% if key != 'Names' %}
-            
               <div class="schedule-box">
                 <strong>{{ key }}</strong>
                 <span>{{ value }}</span>
               </div>
-            
-          {% endif %}
         {% endfor %}
       </div>
     {% elif name %}
