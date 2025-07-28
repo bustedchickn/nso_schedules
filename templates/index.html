@@ -31,22 +31,24 @@
     {% if schedule %}
       <h2>Schedule for {{ name.title() }}</h2>
       <div class="schedule-container">
+        {% set user_color = schedule.Color | default('#FFFFFF') %}
         {% for key, value in schedule.items() %}
           {% if key != 'Color' %}
-            <div class="schedule-box" style=" {% if user_color == '#FFFFFF' %}
-         border-left: 6px solid repeating-linear-gradient(
-           45deg,
-           #f0f0f0,
-           #f0f0f0 10px,
-           #ffffff 10px,
-           #ffffff 20px
-         );
-         border: 2px solid #ccc;
-       {% else %}
-        {{ schedule.Color | default('#FFFFFF') }};"
-                {% if schedule.Color %}
-                  style="background-color: {{ schedule.Color }};"
-                {% endif %}>
+            <div class="schedule-box"
+                style="
+                  {% if user_color == '#FFFFFF' %}
+                    background: repeating-linear-gradient(
+                      45deg,
+                      #f0f0f0,
+                      #f0f0f0 10px,
+                      #ffffff 10px,
+                      #ffffff 20px
+                    );
+                    border: 2px solid #ccc;
+                  {% else %}
+                    border-left: 6px solid {{ user_color }};
+                  {% endif %}
+                ">
               <strong>{{ key }}</strong>
               <span>{{ value }}</span>
             </div>
@@ -54,8 +56,9 @@
         {% endfor %}
       </div>
     {% elif name %}
-      <p>No schedule found for "{{ name }}"</p>
+      <p>No schedule found for \"{{ name }}\"</p>
     {% endif %}
+
 
 
     <h2>Available PDFs</h2>
