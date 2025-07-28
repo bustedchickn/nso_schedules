@@ -33,7 +33,7 @@
       <div class="schedule-container">
         {% for key, value in schedule.items() %}
           {% if key != 'Color' %}
-            <div class="schedule-box" style="background-color: {{ schedule.Color | default('#FFFFFF') }};"
+            <div class="schedule-box" style="border-left: 6px solid {{ schedule.Color | default('#FFFFFF') }};"
                 {% if schedule.Color %}
                   style="background-color: {{ schedule.Color }};"
                 {% endif %}>
