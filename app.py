@@ -7,6 +7,8 @@ app = Flask(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 EXCEL_FILE = os.path.join(BASE_DIR, 'uploads', 'schedule.xlsx')
 
+import math
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     schedule = None
@@ -24,10 +26,30 @@ def index():
             match = df[df['Name_lower'] == name]
 
             if not match.empty:
-                schedule = match.drop(columns=['Name_lower']).to_dict(orient='records')[0]
+                raw_schedule = match.drop(columns=['Name_lower']).to_dict(orient='records')[0]
+
+                # ✅ Clean the dict
+                cleaned_schedule = {}
+                for key, value in raw_schedule.items():
+                    if key == 'Names':
+                        continue  # skip Names key
+                    if value is None:
+                        continue
+                    if isinstance(value, float) and math.isnan(value):
+                        continue
+                    if str(value).strip().lower() == 'nan':
+                        continue
+                    if str(value).strip() == '':
+                        continue
+                    cleaned_schedule[key] = value
+
+                schedule = cleaned_schedule
 
     pdfs = [f for f in os.listdir('static') if f.endswith('.pdf')]
     return render_template('index.html', schedule=schedule, name=name, pdfs=pdfs)
+
+
+
 
 @app.route('/pdfs/<path:filename>')
 def pdfs(filename):
