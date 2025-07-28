@@ -33,10 +33,12 @@
       <div class="schedule-container">
         {% for key, value in schedule.items() %}
           {% if key != 'Names' %}
-            <div class="schedule-box">
-              <strong>{{ key }}</strong>
-              <span>{{ value }}</span>
-            </div>
+            {% if value != '' %}
+              <div class="schedule-box">
+                <strong>{{ key }}</strong>
+                <span>{{ value }}</span>
+              </div>
+            {% endif %}
           {% endif %}
         {% endfor %}
       </div>
