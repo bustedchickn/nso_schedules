@@ -29,6 +29,9 @@ def index():
                 raw_schedule = match.drop(columns=['Name_lower']).to_dict(orient='records')[0]
 
                 cleaned_schedule = {}
+                # Keep 'Color' in your cleaned_schedule!
+# So don't filter it out.
+
                 for key, value in raw_schedule.items():
                     if key == 'Names':
                         continue
@@ -37,7 +40,6 @@ def index():
                     if isinstance(value, float):
                         if math.isnan(value):
                             continue
-                        # ✅ If float but is whole number, convert to int
                         if value.is_integer():
                             value = int(value)
                     if str(value).strip().lower() == 'nan':

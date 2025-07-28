@@ -32,15 +32,21 @@
       <h2>Schedule for {{ name.title() }}</h2>
       <div class="schedule-container">
         {% for key, value in schedule.items() %}
-              <div class="schedule-box">
-                <strong>{{ key }}</strong>
-                <span>{{ value }}</span>
-              </div>
+          {% if key != 'Color' %}
+            <div class="schedule-box" style="background-color: {{ schedule.Color | default('#FFFFFF') }};"
+                {% if schedule.Color %}
+                  style="background-color: {{ schedule.Color }};"
+                {% endif %}>
+              <strong>{{ key }}</strong>
+              <span>{{ value }}</span>
+            </div>
+          {% endif %}
         {% endfor %}
       </div>
     {% elif name %}
       <p>No schedule found for "{{ name }}"</p>
     {% endif %}
+
 
     <h2>Available PDFs</h2>
 <ul class="pdf-list">
