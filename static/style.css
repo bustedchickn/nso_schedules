@@ -87,24 +87,24 @@ button:hover {
   position: fixed;
   z-index: 1000;
   left: 0; top: 0; right: 0; bottom: 0;
-  display: flex;              /* Enable flexbox centering */
-  align-items: center;        /* Vertical center */
-  justify-content: center;    /* Horizontal center */
-  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.4);
   padding: 1rem;
 }
 
 .modal-content {
-  background: #fff;
-  border: 1px solid #888;
-  border-radius: 8px;
+  background: white;
   padding: 1.5rem;
-  max-width: 500px;
+  border-radius: 8px;
+  max-width: 600px;
   width: 100%;
   box-sizing: border-box;
-  max-height: 90vh;   /* Prevent off-screen overflow */
+  max-height: 90vh;
   overflow-y: auto;
 }
+
 
 
 .close {
