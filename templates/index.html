@@ -88,8 +88,7 @@
 
       {% for pdf in pdfs %}
       (function () {
-        const pdfIndex = {{ loop.index }
-      };
+      const pdfIndex = {{ loop.index }};
       const url = "{{ url_for('pdfs', filename=pdf) }}";
       const canvas = document.getElementById('pdf-canvas-' + pdfIndex);
       const context = canvas.getContext('2d');
