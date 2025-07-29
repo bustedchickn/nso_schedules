@@ -114,6 +114,7 @@ button:hover {
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
+  max-width: 100%;
 }
 
 .close:hover,
