@@ -114,7 +114,6 @@ button:hover {
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
-  max-width: 100%;
 }
 
 .close:hover,
@@ -248,5 +247,8 @@ canvas {
   .schedule-box {
     min-width: 100%;
     box-sizing: border-box;
+  }
+  .modal-content {
+    max-width: 90%;
   }
 }
