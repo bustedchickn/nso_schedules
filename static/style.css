@@ -171,6 +171,7 @@ ul.pdf-list li a:hover {
 /* PDF containers */
 .pdf-container {
   margin-bottom: 2rem;
+  max-width: 600px;
 }
 
 canvas {
