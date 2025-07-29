@@ -71,11 +71,12 @@
           <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
           <div class="pdf-controls">
             <button onclick="prevPage({{ loop.index }})">Previous</button>
-            <button onclick="nextPage({{ loop.index }})">Next</button>
             <span id="page-num-{{ loop.index }}">Page 1</span> /
             <span id="page-count-{{ loop.index }}"></span>
-            <button onclick="zoomIn({{ loop.index }})">Zoom In</button>
-            <button onclick="zoomOut({{ loop.index }})">Zoom Out</button>
+            <button onclick="nextPage({{ loop.index }})">Next</button>
+            
+            <!-- <button onclick="zoomIn({{ loop.index }})">Zoom In</button>
+            <button onclick="zoomOut({{ loop.index }})">Zoom Out</button> -->
           </div>
         </div>
       </li>
