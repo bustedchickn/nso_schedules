@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
@@ -12,15 +13,15 @@
   <!-- Link your external stylesheet -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <!-- PDF.js from CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script>
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
 
 </head>
 
 <body>
-  
+
   <main class="content">
     <h1>Find Your Schedule</h1>
     <form method="post">
@@ -29,13 +30,12 @@
     </form>
 
     {% if schedule %}
-      <h2>Schedule for {{ name.title() }}</h2>
-      <div class="schedule-container">
-        {% set user_color = schedule.Color | default('#FFFFFF') %}
-        {% for key, value in schedule.items() %}
-          {% if key != 'Color' %}
-            <div class="schedule-box"
-                style="
+    <h2>Schedule for {{ name.title() }}</h2>
+    <div class="schedule-container">
+      {% set user_color = schedule.Color | default('#FFFFFF') %}
+      {% for key, value in schedule.items() %}
+      {% if key != 'Color' %}
+      <div class="schedule-box" style="
                   {% if schedule.Color == '#FFFFFF' %}
                     background: repeating-linear-gradient(
                       45deg,
@@ -50,45 +50,46 @@
                     border-left: 6px solid {{ user_color }};
                   {% endif %}
                 ">
-              <strong>{{ key }}</strong>
-              <span>{{ value }}</span>
-            </div>
-          {% endif %}
-        {% endfor %}
+        <strong>{{ key }}</strong>
+        <span>{{ value }}</span>
       </div>
+      {% endif %}
+      {% endfor %}
+    </div>
     {% elif name %}
-      <p>No schedule found for \"{{ name }}\"</p>
+    <p>No schedule found for \"{{ name }}\"</p>
     {% endif %}
 
 
 
     <h2>Available PDFs</h2>
-<ul class="pdf-list">
-  {% for pdf in pdfs %}
-  <li>
-    <h3>{{ pdf }}</h3>
-    <div class="pdf-container">
-      <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
-      <div class="pdf-controls">
-        <button onclick="prevPage({{ loop.index }})">Previous</button>
-        <button onclick="nextPage({{ loop.index }})">Next</button>
-        <span id="page-num-{{ loop.index }}">Page 1</span> /
-        <span id="page-count-{{ loop.index }}"></span>
-        <button onclick="zoomIn({{ loop.index }})">Zoom In</button>
-        <button onclick="zoomOut({{ loop.index }})">Zoom Out</button>
-      </div>
-    </div>
-  </li>
-{% endfor %}
+    <ul class="pdf-list">
+      {% for pdf in pdfs %}
+      <li>
+        <h3>{{ pdf }}</h3>
+        <div class="pdf-container">
+          <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
+          <div class="pdf-controls">
+            <button onclick="prevPage({{ loop.index }})">Previous</button>
+            <button onclick="nextPage({{ loop.index }})">Next</button>
+            <span id="page-num-{{ loop.index }}">Page 1</span> /
+            <span id="page-count-{{ loop.index }}"></span>
+            <button onclick="zoomIn({{ loop.index }})">Zoom In</button>
+            <button onclick="zoomOut({{ loop.index }})">Zoom Out</button>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
 
-</ul>
+    </ul>
 
-<script>
-  const pdfStates = {};
+    <script>
+      const pdfStates = {};
 
-  {% for pdf in pdfs %}
-    (function() {
-      const pdfIndex = {{ loop.index }};
+      {% for pdf in pdfs %}
+      (function () {
+        const pdfIndex = {{ loop.index }
+      };
       const url = "{{ url_for('pdfs', filename=pdf) }}";
       const canvas = document.getElementById('pdf-canvas-' + pdfIndex);
       const context = canvas.getContext('2d');
@@ -103,14 +104,14 @@
         context: context
       };
 
-      pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+      pdfjsLib.getDocument(url).promise.then(function (pdfDoc_) {
         pdfStates[pdfIndex].pdfDoc = pdfDoc_;
         document.getElementById('page-count-' + pdfIndex).textContent = pdfDoc_.numPages;
         renderPage(pdfIndex, pdfStates[pdfIndex].pageNum);
       });
 
       // ✅ Click for prev/next:
-      canvas.addEventListener('click', function(e) {
+      canvas.addEventListener('click', function (e) {
         const rect = canvas.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
 
@@ -124,11 +125,11 @@
       // ✅ Swipe for prev/next:
       let touchStartX = 0;
 
-      canvas.addEventListener('touchstart', function(e) {
+      canvas.addEventListener('touchstart', function (e) {
         touchStartX = e.changedTouches[0].screenX;
       });
 
-      canvas.addEventListener('touchend', function(e) {
+      canvas.addEventListener('touchend', function (e) {
         const touchEndX = e.changedTouches[0].screenX;
         const diff = touchEndX - touchStartX;
 
@@ -140,151 +141,180 @@
           }
         }
       });
-    })();
-  {% endfor %}
+    }) ();
+      {% endfor %}
 
-  function renderPage(pdfIndex, num) {
-    const state = pdfStates[pdfIndex];
-    state.pageRendering = true;
+      function renderPage(pdfIndex, num) {
+        const state = pdfStates[pdfIndex];
+        state.pageRendering = true;
 
-    state.pdfDoc.getPage(num).then(function(page) {
-      const viewport = page.getViewport({ scale: state.scale });
-      state.canvas.height = viewport.height;
-      state.canvas.width = viewport.width;
+        state.pdfDoc.getPage(num).then(function (page) {
+          const viewport = page.getViewport({ scale: state.scale });
+          state.canvas.height = viewport.height;
+          state.canvas.width = viewport.width;
 
-      const renderContext = {
-        canvasContext: state.context,
-        viewport: viewport
-      };
+          const renderContext = {
+            canvasContext: state.context,
+            viewport: viewport
+          };
 
-      const renderTask = page.render(renderContext);
+          const renderTask = page.render(renderContext);
 
-      renderTask.promise.then(function() {
-        state.pageRendering = false;
+          renderTask.promise.then(function () {
+            state.pageRendering = false;
 
-        if (state.pageNumPending !== null) {
-          renderPage(pdfIndex, state.pageNumPending);
-          state.pageNumPending = null;
+            if (state.pageNumPending !== null) {
+              renderPage(pdfIndex, state.pageNumPending);
+              state.pageNumPending = null;
+            }
+          });
+
+          document.getElementById('page-num-' + pdfIndex).textContent = num;
+        });
+      }
+
+      function queueRenderPage(pdfIndex, num) {
+        const state = pdfStates[pdfIndex];
+        if (state.pageRendering) {
+          state.pageNumPending = num;
+        } else {
+          renderPage(pdfIndex, num);
         }
-      });
+      }
 
-      document.getElementById('page-num-' + pdfIndex).textContent = num;
-    });
-  }
+      function prevPage(pdfIndex) {
+        const state = pdfStates[pdfIndex];
+        if (state.pageNum <= 1) return;
+        state.pageNum--;
+        queueRenderPage(pdfIndex, state.pageNum);
+      }
 
-  function queueRenderPage(pdfIndex, num) {
-    const state = pdfStates[pdfIndex];
-    if (state.pageRendering) {
-      state.pageNumPending = num;
-    } else {
-      renderPage(pdfIndex, num);
-    }
-  }
+      function nextPage(pdfIndex) {
+        const state = pdfStates[pdfIndex];
+        if (state.pageNum >= state.pdfDoc.numPages) return;
+        state.pageNum++;
+        queueRenderPage(pdfIndex, state.pageNum);
+      }
 
-  function prevPage(pdfIndex) {
-    const state = pdfStates[pdfIndex];
-    if (state.pageNum <= 1) return;
-    state.pageNum--;
-    queueRenderPage(pdfIndex, state.pageNum);
-  }
+      function zoomIn(pdfIndex) {
+        const state = pdfStates[pdfIndex];
+        state.scale = Math.min(state.scale + 0.2, 3.0);
+        queueRenderPage(pdfIndex, state.pageNum);
+      }
 
-  function nextPage(pdfIndex) {
-    const state = pdfStates[pdfIndex];
-    if (state.pageNum >= state.pdfDoc.numPages) return;
-    state.pageNum++;
-    queueRenderPage(pdfIndex, state.pageNum);
-  }
-
-  function zoomIn(pdfIndex) {
-    const state = pdfStates[pdfIndex];
-    state.scale = Math.min(state.scale + 0.2, 3.0);
-    queueRenderPage(pdfIndex, state.pageNum);
-  }
-
-  function zoomOut(pdfIndex) {
-    const state = pdfStates[pdfIndex];
-    state.scale = Math.max(state.scale - 0.2, 0.5);
-    queueRenderPage(pdfIndex, state.pageNum);
-  }
-</script>
+      function zoomOut(pdfIndex) {
+        const state = pdfStates[pdfIndex];
+        state.scale = Math.max(state.scale - 0.2, 0.5);
+        queueRenderPage(pdfIndex, state.pageNum);
+      }
+    </script>
     {% if show_welcome %}
-      <script>
-        window.SHOW_WELCOME = true;
-      </script>
+    <script>
+      window.SHOW_WELCOME = true;
+    </script>
     {% endif %}
 
     <!-- Welcome Modal -->
     <div id="welcomeModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
-        <h2>Welcome to Our Portal!</h2>
-        <p>Here’s your welcome letter. It shows automatically the first time, but you can see it any time.</p>
+        <h2>Purpose of New Student Orientation</h2>
+        <p class="para">New Student Orientation is intended to help new students familiarize themselves with campus,
+          what BYU-Idaho has to offer, and make lasting connections. We will help students illuminate concerns that they
+          have and create friendships with other students enrolled in their first year.</p>
+        <p class="para">This semester, our New Student Orientation is focused on “Lighting the World Continually”.
+          During the month of December, we tried to bring light to those around us. Throughout New Student Orientation,
+          let us continue to bear our light, share our light, and encourage others to do the same. </p>
+        <p class="para">We can bear our light by striving to live worthy lives. The Lord commanded “be ye clean that
+          bear the vessels of the Lord”. Similar to incandescent light bulbs being void of burnable oxygen, we must
+          purify ourselves to allow our light to shine. President Russell M. Nelson said “Nothing opens the heavens
+          quite like the combination of increased purity, exact obedience, earnest seeking, daily feasting on the words
+          of Christ in the Book of Mormon, and regular time committed to temple and family history work.” </p>
+        <p class="para">We can share our light through service and sacrifice. Recently we have had practice sharing and
+          lighting the world over the Christmas season. Praying for opportunities to share your light will unlock hearts
+          to touch. Let us continue to be “quick to observe” and “love God and our neighbor”. </p>
+        <p class="para">Disciple leaders motivate others to inspire those around them. The people they impact strive to
+          let their light shine and impact others. Try to notice ways that the people you interact with share their
+          light. Your humility will help them feel God’s love. Don’t be afraid to let your light shine; pray for love
+          and charity as “perfect love casteth out all fear.”</p>
+        <p class="para">We are grateful for your help, your skills, and your willingness to serve. As you prepare for
+          your mentor groups, we pray that you will know how to lift each member of your group. We hope you will
+          experience the blessings and miracles that follow disciples of Jesus Christ as you assist Him in serving these
+          first-year students and their parents. The Lord will sustain you as you humbly serve in this capacity. May you
+          be blessed with joy and happiness this semester.</p>
+        <p>With love,</p>
+        <p>Brother Watson, Susanna Lee, Rachel Bull, Talmage Kay, Sarah Maughan </p>
+        <p>New Student Orientation Team</p>
+        <p>BYU-Idaho</p>
+        
+
       </div>
     </div>
 
 
-  <a href="{{ url_for('welcome') }}">Read Mission Statement Again</a>
+    <a href="{{ url_for('welcome') }}">Read Mission Statement Again</a>
 
 
   </main>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
-        if (window.innerWidth <= 782) {
+      if (window.innerWidth <= 782) {
         const firstBox = document.querySelector('.schedule-box');
         if (firstBox) {
-            firstBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            firstBox.classList.add('highlight');
+          firstBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          firstBox.classList.add('highlight');
         }
-        }
+      }
 
-        const observer = new IntersectionObserver(entries => {
+      const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
+          if (entry.isIntersecting) {
             entry.target.classList.add('in-view');
             entry.target.classList.add('lift');
-            } else {
+          } else {
             entry.target.classList.remove('lift');
-            }
+          }
         });
-        }, {
+      }, {
         threshold: 0.15, // 50% of the element must be visible
         rootMargin: '-25% 0px -25% 0px' // push detection closer to center
-        });
+      });
 
-        document.querySelectorAll('.schedule-box').forEach(box => {
+      document.querySelectorAll('.schedule-box').forEach(box => {
         observer.observe(box);
-        });
+      });
     });
-    </script>
-    <script>
-  const modal = document.getElementById("welcomeModal");
-  const span = document.querySelector(".close");
-  const link = document.getElementById("showWelcomeLink");
+  </script>
+  <script>
+    const modal = document.getElementById("welcomeModal");
+    const span = document.querySelector(".close");
+    const link = document.getElementById("showWelcomeLink");
 
-  if (window.SHOW_WELCOME) {
-    modal.style.display = "block";
-  }
+    if (window.SHOW_WELCOME) {
+      modal.style.display = "block";
+    }
 
-  span.onclick = () => {
-    modal.style.display = "none";
-  }
-
-  window.onclick = (event) => {
-    if (event.target == modal) {
+    span.onclick = () => {
       modal.style.display = "none";
     }
-  }
 
-  link.onclick = (e) => {
-    e.preventDefault();
-    modal.style.display = "block";
-  }
-</script>
+    window.onclick = (event) => {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    link.onclick = (e) => {
+      e.preventDefault();
+      modal.style.display = "block";
+    }
+  </script>
 
 
-    <footer class="footer">
-      <img src="{{ url_for('static', filename='fyebluelogo.png') }}" alt="byuilogo" class="byuilogo">
-    </footer>
+  <footer class="footer">
+    <img src="{{ url_for('static', filename='fyebluelogo.png') }}" alt="byuilogo" class="byuilogo">
+  </footer>
 
 </body>
+
 </html>

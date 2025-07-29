@@ -102,6 +102,12 @@ button:hover {
   border-radius: 8px;
 }
 
+.para {
+  text-indent: 2em; /* or whatever size you like */
+  margin-bottom: 1em; /* optional: add space between paragraphs */
+}
+
+
 .close {
   color: #aaa;
   float: right;
