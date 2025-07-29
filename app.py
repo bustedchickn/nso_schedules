@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, make_response
 import pandas as pd
 
 app = Flask(__name__)
@@ -51,7 +51,23 @@ def index():
                 schedule = cleaned_schedule
 
     pdfs = [f for f in os.listdir('static') if f.endswith('.pdf')]
-    return render_template('index.html', schedule=schedule, name=name, pdfs=pdfs)
+    # 🗂️ Check cookie
+    has_seen_welcome = request.cookies.get('has_seen_welcome', 'false') == 'true'
+
+    resp = make_response(render_template(
+        'index.html',
+        schedule=schedule,
+        name=name,
+        pdfs=pdfs,
+        show_welcome=not has_seen_welcome  # show if never seen
+    ))
+
+    # 🗂️ If not seen yet, set cookie to remember it
+    if not has_seen_welcome:
+        resp.set_cookie('has_seen_welcome', 'true', max_age=60*60*24*1)  # The first time each day
+
+    return resp
+    
 
 
 
@@ -59,6 +75,11 @@ def index():
 @app.route('/pdfs/<path:filename>')
 def pdfs(filename):
     return send_from_directory('static', filename)
+
+@app.route('/welcome')
+def welcome():
+    return render_template('welcome.html')
+
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
