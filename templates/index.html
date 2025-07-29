@@ -98,7 +98,7 @@
         pageNum: 1,
         pageRendering: false,
         pageNumPending: null,
-        scale: 3.0,
+        scale: window.innerWidth <= 768 ? 3.0 : 1.0,
         canvas: canvas,
         context: context
       };
