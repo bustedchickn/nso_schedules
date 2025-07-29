@@ -22,6 +22,12 @@
 <body>
   
   <main class="content">
+    {% if show_welcome %}
+      <div class="welcome-letter">
+        <h2>Welcome to Our Portal!</h2>
+        <p>This is your welcome letter with important information.</p>
+      </div>
+    {% endif %}
     <h1>Find Your Schedule</h1>
     <form method="post">
       <input type="text" name="name" placeholder="Enter your name" required />
