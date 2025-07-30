@@ -293,9 +293,10 @@
     const span = document.querySelector(".close");
     const link = document.getElementById("showWelcomeLink");
 
-    if (window.SHOW_WELCOME) {
+    if (window.SHOW_WELCOME == true) {
       modal.style.display = "block";
     }
+    else modal.style.display = "none";
 
     span.onclick = () => {
       modal.style.display = "none";
