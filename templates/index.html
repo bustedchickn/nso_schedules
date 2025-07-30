@@ -313,6 +313,12 @@
     }
   </script>
 
+  <script>
+    console.log("Cookie seen by Flask: '{{ has_seen_welcome }}'");
+    console.log(`Modal should show: {{ show_welcome }}`);
+  </script>
+
+
 
   <footer class="footer">
     <img src="{{ url_for('static', filename='fyebluelogo.png') }}" alt="byuilogo" class="byuilogo">
