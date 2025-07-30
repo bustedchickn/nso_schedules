@@ -1,4 +1,6 @@
 import os
+import sys
+sys.stdout.flush()
 from flask import Flask, render_template, request, send_from_directory, make_response
 import pandas as pd
 
@@ -66,7 +68,7 @@ def index():
     if not has_seen_welcome:
         resp.set_cookie('has_seen_welcome', 'true', max_age=60*60*24*1,path='/',samesite='Lax')  # The first time each day
     
-    print(f"Cookie seen? {has_seen_welcome}")
+    print(f"Cookie seen? {has_seen_welcome}",flush=True)
 
 
     return resp
