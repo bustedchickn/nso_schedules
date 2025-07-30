@@ -52,7 +52,7 @@ def index():
 
     pdfs = [f for f in os.listdir('static') if f.endswith('.pdf')]
     # 🗂️ Check cookie
-    has_seen_welcome = request.cookies.get('has_seen_welcome', 'false', path='/') == 'true'
+    has_seen_welcome = request.cookies.get('has_seen_welcome', 'false') == 'true'
 
     resp = make_response(render_template(
         'index.html',
