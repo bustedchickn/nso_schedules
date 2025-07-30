@@ -64,7 +64,7 @@ def index():
 
     # 🗂️ If not seen yet, set cookie to remember it
     if not has_seen_welcome:
-        resp.set_cookie('has_seen_welcome', 'true', max_age=60*60*24*1,path='/')  # The first time each day
+        resp.set_cookie('has_seen_welcome', 'true', max_age=60*60*24*1,path='/',samesite='Lax')  # The first time each day
     
     print(f"Cookie seen? {has_seen_welcome}")
 
