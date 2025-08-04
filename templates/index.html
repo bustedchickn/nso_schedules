@@ -28,6 +28,19 @@
       <input type="text" name="name" placeholder="Enter your name" required />
       <button type="submit">Search</button>
     </form>
+    {% if suggestions %}
+      <div class="suggestions">
+        <p>Did you mean:</p>
+        <ul>
+          {% for s in suggestions %}
+            <form method="POST" style="display:inline;">
+              <input type="hidden" name="name" value="{{ s }}">
+              <button type="submit">{{ s }}</button>
+            </form>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
 
     {% if schedule %}
     <h2>Schedule for {{ name.title() }}</h2>

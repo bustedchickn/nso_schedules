@@ -11,10 +11,13 @@ EXCEL_FILE = os.path.join(BASE_DIR, 'uploads', 'schedule.xlsx')
 
 import math
 
+import difflib
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     schedule = None
     name = None
+    suggestions = []  # NEW: holds possible suggestions
 
     if request.method == 'POST':
         name = request.form['name'].strip().lower()
@@ -25,15 +28,30 @@ def index():
         else:
             df = pd.read_excel(EXCEL_FILE)
             df['Name_lower'] = df['Names'].str.strip().str.lower()
+
+            # Exact match
             match = df[df['Name_lower'] == name]
 
+            if match.empty:
+                # Partial match
+                match = df[df['Name_lower'].str.contains(name)]
+
+            if match.empty:
+                # Fuzzy match — find up to 5 similar names
+                all_names = df['Name_lower'].tolist()
+                close_matches = difflib.get_close_matches(name, all_names, n=5, cutoff=0.6)
+
+                if len(close_matches) == 1:
+                    # Only one close match → auto-select it
+                    match = df[df['Name_lower'] == close_matches[0]]
+                elif len(close_matches) > 1:
+                    # Multiple matches → show suggestions
+                    suggestions = [df[df['Name_lower'] == m]['Names'].values[0] for m in close_matches]
+
             if not match.empty:
-                raw_schedule = match.drop(columns=['Name_lower']).to_dict(orient='records')[0]
+                raw_schedule = match.iloc[0].drop(labels=['Name_lower']).to_dict()
 
                 cleaned_schedule = {}
-                # Keep 'Color' in your cleaned_schedule!
-# So don't filter it out.
-
                 for key, value in raw_schedule.items():
                     if key == 'Names':
                         continue
@@ -53,7 +71,6 @@ def index():
                 schedule = cleaned_schedule
 
     pdfs = [f for f in os.listdir('static') if f.endswith('.pdf')]
-    # 🗂️ Check cookie
     has_seen_welcome = request.cookies.get('has_seen_welcome', 'false') == 'true'
 
     resp = make_response(render_template(
@@ -61,18 +78,17 @@ def index():
         schedule=schedule,
         name=name,
         pdfs=pdfs,
-        show_welcome=not has_seen_welcome  # show if never seen
+        suggestions=suggestions,  # Pass to template
+        show_welcome=not has_seen_welcome
     ))
 
-    # 🗂️ If not seen yet, set cookie to remember it
     if not has_seen_welcome:
-        resp.set_cookie('has_seen_welcome', 'true', max_age=60*60*24*1,path='/',samesite='Lax')  # The first time each day
-    
-    print(f"Cookie seen? {has_seen_welcome}",flush=True)
+        resp.set_cookie('has_seen_welcome', 'true', max_age=60*60*24*1, path='/', samesite='Lax')
 
+    print(f"Cookie seen? {has_seen_welcome}", flush=True)
 
     return resp
-    
+
 
 
 
