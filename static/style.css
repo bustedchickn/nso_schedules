@@ -12,7 +12,7 @@ html, body {
 }
 
 body{
-  cursor: url('https://web-production-6901.up.railway.app/static/image-removebg-preview.cur'), auto;
+  cursor: url('/static/cursor.cur'), auto;
 }
 
 /* Content wrapper with side margin */
