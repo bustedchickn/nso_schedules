@@ -8,6 +8,10 @@ html, body {
   color: #333;
   display: flex;
   flex-direction: column;
+  
+}
+
+body{
   cursor: url('https://web-production-6901.up.railway.app/static/image-removebg-preview.cur'), auto;
 }
 
