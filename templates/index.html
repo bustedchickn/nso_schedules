@@ -43,7 +43,7 @@
     {% endif %}
 
     {% if schedule %}
-    <h2>Schedule for {{ name.title() }}</h2>
+    <h2>Schedule for {{ matched_name }}</h2>
     <div class="schedule-container">
       {% set user_color = schedule.Color | default('#FFFFFF') %}
       {% for key, value in schedule.items() %}
@@ -70,7 +70,7 @@
       {% endfor %}
     </div>
     {% elif name %}
-    <p>No schedule found for \"{{ name }}\"</p>
+    <p>No schedule found for {{ name.title() }}</p>
     {% endif %}
 
 

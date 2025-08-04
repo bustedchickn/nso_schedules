@@ -13,11 +13,13 @@ import math
 
 import difflib
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     schedule = None
     name = None
     suggestions = []  # NEW: holds possible suggestions
+    matched_name = None
 
     if request.method == 'POST':
         name = request.form['name'].strip().lower()
@@ -49,6 +51,7 @@ def index():
                     suggestions = [df[df['Name_lower'] == m]['Names'].values[0] for m in close_matches]
 
             if not match.empty:
+                matched_name = match.iloc[0]['Names']
                 raw_schedule = match.iloc[0].drop(labels=['Name_lower']).to_dict()
 
                 cleaned_schedule = {}
@@ -77,6 +80,7 @@ def index():
         'index.html',
         schedule=schedule,
         name=name,
+        matched_name=matched_name,
         pdfs=pdfs,
         suggestions=suggestions,  # Pass to template
         show_welcome=not has_seen_welcome
