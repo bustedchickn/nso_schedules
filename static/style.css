@@ -8,6 +8,7 @@ html, body {
   color: #333;
   display: flex;
   flex-direction: column;
+  cursor: url(image-removebg-preview.png);
 }
 
 /* Content wrapper with side margin */
@@ -69,6 +70,12 @@ button {
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s ease;
+}
+
+.name_button {
+  background-color: none;
+  color: #333;
+
 }
 
 button:hover {

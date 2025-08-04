@@ -35,7 +35,7 @@
           {% for s in suggestions %}
             <form method="POST" style="display:inline;">
               <input type="hidden" name="name" value="{{ s }}">
-              <button type="submit">{{ s }}</button>
+              <button class="name_button" type="submit">{{ s }}</button>
             </form>
           {% endfor %}
         </ul>
