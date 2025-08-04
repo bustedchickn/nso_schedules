@@ -36,19 +36,26 @@ def index():
 
             if match.empty:
                 # Partial match
-                match = df[df['Name_lower'].str.contains(name)]
+                partial_match = df[df['Name_lower'].str.contains(name)]
+                if not partial_match.empty:
+                    if len(partial_match) == 1:
+                        match = partial_match
+                    else:
+                        suggestions = partial_match['Names'].tolist()
+                else:
+                    # Fuzzy fallback
+                    all_names = df['Name_lower'].tolist()
+                    close_matches = difflib.get_close_matches(name, all_names, n=5, cutoff=0.6)
 
-            if match.empty:
-                # Fuzzy match — find up to 5 similar names
-                all_names = df['Name_lower'].tolist()
-                close_matches = difflib.get_close_matches(name, all_names, n=5, cutoff=0.6)
+                    if len(close_matches) == 1:
+                        match = df[df['Name_lower'] == close_matches[0]]
+                    elif len(close_matches) > 1:
+                        for m in close_matches:
+                            matches = df[df['Name_lower'] == m]['Names'].tolist()
+                            suggestions.extend(matches)
+                        suggestions = list(set(suggestions))
 
-                if len(close_matches) == 1:
-                    # Only one close match → auto-select it
-                    match = df[df['Name_lower'] == close_matches[0]]
-                elif len(close_matches) > 1:
-                    # Multiple matches → show suggestions
-                    suggestions = [df[df['Name_lower'] == m]['Names'].values[0] for m in close_matches]
+
 
             if not match.empty:
                 matched_name = match.iloc[0]['Names']
