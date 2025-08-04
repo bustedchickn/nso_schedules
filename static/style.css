@@ -8,7 +8,7 @@ html, body {
   color: #333;
   display: flex;
   flex-direction: column;
-  cursor: url('/static/image-removebg-preview.png'), auto;
+  cursor: url('https://web-production-6901.up.railway.app/static/image-removebg-preview.png'), auto;
 }
 
 /* Content wrapper with side margin */
