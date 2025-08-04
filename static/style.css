@@ -12,8 +12,8 @@ html, body {
 }
 
 body{
-  /* cursor: url('/static/cursor.cur'), auto; */
-  cursor: url('https://upload.wikimedia.org/wikipedia/commons/2/28/Arrow.cur'), auto;
+  cursor: url('/static/cursor.cur'), auto;
+  /* cursor: url('https://upload.wikimedia.org/wikipedia/commons/2/28/Arrow.cur'), auto; */
 }
 
 
