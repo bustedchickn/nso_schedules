@@ -21,9 +21,14 @@
 </head>
 
 <body>
+  <nav class="top-nav">
+    <a href="#find_schedule">Schedule</a>
+    <a href="#available_pdfs">PDFs</a>
+    <a href="#checkin_code">Check-in Code</a>
+  </nav>
 
   <main class="content">
-    <h1>Find Your Schedule</h1>
+    <h1 id="find_schedule">Find Your Schedule</h1>
     <form method="post">
       <input type="text" name="name" placeholder="Enter your name" required />
       <button type="submit">Search</button>
@@ -75,7 +80,7 @@
 
  
 
-    <h2>Available PDFs</h2>
+    <h2 id="available_pdfs">Available PDFs</h2>
     <ul class="pdf-list">
       {% for pdf in pdfs %}
       <li>
@@ -96,6 +101,9 @@
       {% endfor %}
 
     </ul>
+
+    <h2 id="checkin_code">Check-in Code</h2>
+    <img src="/static/checkin_code.png" alt="check-in qr code">
 
    
     
