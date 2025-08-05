@@ -28,32 +28,33 @@
   </nav>
 
   <main class="content">
-    <h1 id="find_schedule">Find Your Schedule</h1>
-    <form method="post">
-      <input type="text" name="name" placeholder="Enter your name" required />
-      <button type="submit">Search</button>
-    </form>
-    {% if suggestions %}
+    <section id="find_schedule">
+      <h1>Find Your Schedule</h1>
+      <form method="post">
+        <input type="text" name="name" placeholder="Enter your name" required />
+        <button type="submit">Search</button>
+      </form>
+      {% if suggestions %}
       <div class="suggestions">
         <p>Did you mean:</p>
         <ul>
           {% for s in suggestions %}
-            <form method="POST" style="display:inline;">
-              <input type="hidden" name="name" value="{{ s }}">
-              <button class="name_button" type="submit">{{ s }}</button>
-            </form>
+          <form method="POST" style="display:inline;">
+            <input type="hidden" name="name" value="{{ s }}">
+            <button class="name_button" type="submit">{{ s }}</button>
+          </form>
           {% endfor %}
         </ul>
       </div>
-    {% endif %}
+      {% endif %}
 
-    {% if schedule %}
-    <h2>Schedule for {{ matched_name }}</h2>
-    <div class="schedule-container">
-      {% set user_color = schedule.Color | default('#FFFFFF') %}
-      {% for key, value in schedule.items() %}
-      {% if key != 'Color' %}
-      <div class="schedule-box" style="
+      {% if schedule %}
+      <h2>Schedule for {{ matched_name }}</h2>
+      <div class="schedule-container">
+        {% set user_color = schedule.Color | default('#FFFFFF') %}
+        {% for key, value in schedule.items() %}
+        {% if key != 'Color' %}
+        <div class="schedule-box" style="
                   {% if schedule.Color == '#FFFFFF' %}
                     background: repeating-linear-gradient(
                       45deg,
@@ -68,46 +69,52 @@
                     border-left: 6px solid {{ user_color }};
                   {% endif %}
                 ">
-        <strong>{{ key }}</strong>
-        <span>{{ value }}</span>
-      </div>
-      {% endif %}
-      {% endfor %}
-    </div>
-    {% elif name %}
-    <p>No schedule found for {{ name.title() }}</p>
-    {% endif %}
-
- 
-
-    <h2 id="available_pdfs">Available PDFs</h2>
-    <ul class="pdf-list">
-      {% for pdf in pdfs %}
-      <li>
-        <h3>{{ pdf }}</h3>
-        <div class="pdf-container">
-          <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
-          <div class="pdf-controls">
-            <button onclick="prevPage({{ loop.index }})">Previous</button>
-            <span id="page-num-{{ loop.index }}">Page 1</span> /
-            <span id="page-count-{{ loop.index }}"></span>
-            <button onclick="nextPage({{ loop.index }})">Next</button>
-            
-            <!-- <button onclick="zoomIn({{ loop.index }})">Zoom In</button>
-            <button onclick="zoomOut({{ loop.index }})">Zoom Out</button> -->
-          </div>
+          <strong>{{ key }}</strong>
+          <span>{{ value }}</span>
         </div>
-      </li>
-      {% endfor %}
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% elif name %}
+      <p>No schedule found for {{ name.title() }}</p>
+      {% endif %}
 
-    </ul>
+    </section>
 
-    <h2 id="checkin_code">Check-in Code</h2>
-    <img src="/static/checkin_code.png" alt="check-in qr code">
+
+    <section id="available_pdfs">
+      <h2>Available PDFs</h2>
+      <ul class="pdf-list">
+        {% for pdf in pdfs %}
+        <li>
+          <h3>{{ pdf }}</h3>
+          <div class="pdf-container">
+            <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
+            <div class="pdf-controls">
+              <button onclick="prevPage({{ loop.index }})">Previous</button>
+              <span id="page-num-{{ loop.index }}">Page 1</span> /
+              <span id="page-count-{{ loop.index }}"></span>
+              <button onclick="nextPage({{ loop.index }})">Next</button>
+
+              <!-- <button onclick="zoomIn({{ loop.index }})">Zoom In</button>
+            <button onclick="zoomOut({{ loop.index }})">Zoom Out</button> -->
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+
+      </ul>
+    </section>
+
+    <section id="checkin_code">
+      <h2>Check-in Code</h2>
+      <img src="/static/checkin_code.png" alt="check-in qr code">
+    </section>
+
     <br>
 
-   
-    
+
+
     <!-- Welcome Modal -->
     <div id="welcomeModal" class="modal">
       <div class="modal-content">
@@ -140,20 +147,20 @@
         <p>Cassi Devries, Rozlynn Evans, Kylie Jones, Talmage Kay, Rachel Stansbury, Seth Taylor</p>
         <p>New Student Orientation Team</p>
         <p>BYU-Idaho</p>
-        
+
 
       </div>
     </div>
 
 
     <!-- <a href="{{ url_for('welcome') }}">Read Mission Statement Again</a> -->
-    
+
     <a href="#" id="showWelcomeLink">Read Mission Statement Again</a>
 
 
 
   </main>
-  
+
 
 
 
@@ -161,41 +168,40 @@
     <img src="{{ url_for('static', filename='fyebluelogo.png') }}" alt="byuilogo" class="byuilogo">
   </footer>
   <!-- Put these BEFORE your closing </body> -->
-<script>
-  window.SHOW_WELCOME = {{ 'true' if show_welcome else 'false' }};
-</script>
+  <script>
+    window.SHOW_WELCOME = {{ 'true' if show_welcome else 'false' }};
+  </script>
 
-{% for pdf in pdfs %}
-  <div style="display: none;"
-       data-pdf-index="{{ loop.index }}"
-       data-pdf-url="{{ url_for('pdfs', filename=pdf) }}"></div>
-{% endfor %}
+  {% for pdf in pdfs %}
+  <div style="display: none;" data-pdf-index="{{ loop.index }}" data-pdf-url="{{ url_for('pdfs', filename=pdf) }}">
+  </div>
+  {% endfor %}
 
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const navLinks = document.querySelectorAll('.top-nav a[href^="#"]');
-    const navHeight = document.querySelector('.top-nav')?.offsetHeight || 80;
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const navLinks = document.querySelectorAll('.top-nav a[href^="#"]');
+      const navHeight = document.querySelector('.top-nav')?.offsetHeight || 80;
 
-    navLinks.forEach(link => {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        const href = this.getAttribute('href');
-        const target = document.querySelector(href);
-        
-        if (target) {
-          const targetPosition = target.offsetTop - navHeight;
+      navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const href = this.getAttribute('href');
+          const target = document.querySelector(href);
 
-          window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-          });
-        }
+          if (target) {
+            const targetPosition = target.offsetTop - navHeight;
+
+            window.scrollTo({
+              top: targetPosition,
+              behavior: 'smooth'
+            });
+          }
+        });
       });
     });
-  });
-</script>
+  </script>
 
 
 
