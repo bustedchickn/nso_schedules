@@ -175,18 +175,20 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.top-nav a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
+    const navLinks = document.querySelectorAll('.top-nav a[href^="#"]');
+    const navHeight = document.querySelector('.top-nav')?.offsetHeight || 80;
 
+    navLinks.forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        const href = this.getAttribute('href');
+        const target = document.querySelector(href);
+        
         if (target) {
-          const headerOffset = document.querySelector('.top-nav')?.offsetHeight || 80;
-          const elementPosition = target.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.scrollY - headerOffset;
+          const targetPosition = target.offsetTop - navHeight;
 
           window.scrollTo({
-            top: offsetPosition,
+            top: targetPosition,
             behavior: 'smooth'
           });
         }
@@ -194,6 +196,7 @@
     });
   });
 </script>
+
 
 
 

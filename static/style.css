@@ -18,14 +18,16 @@ html {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  background-color: #ffffffee;
-  padding: 0.5rem 1rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  display: flex;
-  gap: 1rem;
+  width: 100%;
+  background: white;
   z-index: 1000;
+  padding: 1rem;
 }
+
+.content {
+  padding-top: 80px; /* matches top-nav height */
+}
+
 
 .top-nav a {
   text-decoration: none;
