@@ -12,7 +12,7 @@ html, body {
 }
 
 body{
-  cursor: url('/static/cusor.cur'), auto;
+  /* cursor: url('/static/cusor.cur'), auto; */
   /* cursor: url('https://upload.wikimedia.org/wikipedia/commons/2/28/Arrow.cur'), auto; */
 }
 
@@ -74,7 +74,7 @@ button {
   background-color: rgb(0, 109, 182);
   color: white;
   border-radius: 6px;
-  cursor: url('/static/opencursor.cur'), pointer;
+  cursor: pointer;
   transition: background 0.2s ease;
 }
 
@@ -125,7 +125,7 @@ button:hover {
   float: right;
   font-size: 28px;
   font-weight: bold;
-  cursor: url('/static/opencursor.cur'), pointer;
+  cursor: pointer;
 }
 
 .close:hover,
