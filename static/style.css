@@ -13,10 +13,7 @@ html, body {
 html {
   scroll-behavior: smooth;
 }
-body{
-  /* cursor: url('/static/cusor.cur'), auto; */
-  /* cursor: url('https://upload.wikimedia.org/wikipedia/commons/2/28/Arrow.cur'), auto; */
-}
+
 .top-nav {
   position: fixed;
   top: 0;
