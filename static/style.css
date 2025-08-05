@@ -15,29 +15,34 @@ html {
 }
 
 .top-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: white;
-  z-index: 1000;
-  padding: 1rem;
+  display: flex;
+  justify-content: space-around; /* or space-between / space-evenly */
+  align-items: center;
+  background-color: white; /* or your preferred color */
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
 }
-
-.content {
-  padding-top: 80px; /* matches top-nav height */
-}
-
 
 .top-nav a {
+  flex: 1;                      /* Make each link take equal space */
+  text-align: center;          /* Center text inside */
   text-decoration: none;
+  padding: 12px 0;
   color: #333;
   font-weight: bold;
+  border-right: 1px solid #eee; /* Optional: divider */
 }
 
-.top-nav a:hover {
-  color: #007bff;
+.top-nav a:last-child {
+  border-right: none;          /* Remove divider from last link */
 }
+
+.top-nav a:active {
+  transform: scale(0.97);
+  transition: transform 0.1s;
+}
+
+
 
 
 

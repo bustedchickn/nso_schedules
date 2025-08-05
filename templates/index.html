@@ -179,29 +179,21 @@
 
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-  <!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const navLinks = document.querySelectorAll('.top-nav a');
-      const navHeight = document.querySelector('.top-nav')?.offsetHeight || 80;
+  <script>
+  // Load the audio
+  const clickSound = new Audio("{{ url_for('static', filename='sounds/click.mp3') }}");
 
-      navLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-          e.preventDefault();
-          const href = this.getAttribute('href');
-          const target = document.querySelector(href);
-
-          if (target) {
-            const targetPosition = target.offsetTop - navHeight;
-
-            window.scrollTo({
-              top: targetPosition,
-              behavior: 'smooth'
-            });
-          }
-        });
+  // Attach sound to each nav link
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".top-nav a").forEach(link => {
+      link.addEventListener("click", function () {
+        clickSound.currentTime = 0; // rewind to start
+        clickSound.play().catch(e => console.warn("Sound failed to play:", e));
       });
     });
-  </script> -->
+  });
+</script>
+
 
 
 
