@@ -188,6 +188,7 @@
     document.querySelectorAll(".top-nav a").forEach(link => {
       link.addEventListener("click", function () {
         clickSound.currentTime = 0; // rewind to start
+        clickSound.volume = .3;
         clickSound.play().catch(e => console.warn("Sound failed to play:", e));
       });
     });
