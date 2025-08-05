@@ -24,7 +24,7 @@ html {
   justify-content: space-around; /* or space-between / space-evenly */
   align-items: center;
   color: white;
-  background-color: rgba(0, 71, 129, 0.648); /* or your preferred color */
+  background-color: rgba(0, 85, 155, 0.822); /* or your preferred color */
   padding: 10px 0;
   border-bottom: 1px solid #ccc;
 }
