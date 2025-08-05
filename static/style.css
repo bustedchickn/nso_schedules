@@ -46,13 +46,16 @@ html {
   transform: scale(0.97);
   transition: transform 0.1s;
 }
-
+body {
+  padding-top: 60px; /* prevents content from hiding under fixed nav */
+}
 
 
 
 
 /* Content wrapper with side margin */
 .content {
+
   flex: 1;
   margin: 2rem;
   box-sizing: border-box;
