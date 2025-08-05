@@ -34,7 +34,7 @@ html {
   text-align: center;          /* Center text inside */
   text-decoration: none;
   padding: 12px 0;
-  color: #333;
+  color: white;
   font-weight: bold;
   border-right: 1px solid #eee; /* Optional: divider */
 }
@@ -44,8 +44,8 @@ html {
 }
 
 .top-nav a:active {
-  transform: scale(0.97);
-  transition: transform 0.1s;
+  transform: scale(0.87);
+  transition: transform 0.2s;
 }
 body {
   padding-top: 60px; /* prevents content from hiding under fixed nav */
