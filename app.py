@@ -67,6 +67,33 @@ def index():
                         continue
                     if value is None:
                         continue
+                    if key == 'Color':
+                        if value == 'white':
+                            value = '#FFFFFF'
+                        elif value == 'black':
+                            value = '#000000'
+                        elif value == 'dark pink':
+                            value = '#bf006e'
+                        elif value == 'light pink':
+                            value = '#ffcbf2'
+                        elif value == 'purple':
+                            value = '#5c32b2'
+                        elif value == 'blue':
+                            value = '#0093e1'
+                        elif value == 'lime':
+                            value = '#a3e44b'
+                        elif value == 'yellow':
+                            value = '#fde800'
+                        elif value == 'orange':
+                            value = '#ed6b01'
+                        elif value == 'red':
+                            value = '#e30004'
+                        elif value == 'dark green':
+                            value = '#459649'
+                        elif value == 'gold':
+                            value = '#9f8c6c'
+                        elif value == 'silver':
+                            value = '#a9b9c9'
                     if isinstance(value, float):
                         if math.isnan(value):
                             continue
