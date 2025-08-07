@@ -28,7 +28,7 @@
   </nav>
 
   <main class="content">
-    <section id="find_schedule">
+    <!-- <section id="find_schedule">
       <h1>Find Your Schedule</h1>
       <form method="post">
         <input type="text" name="name" placeholder="Enter your name" required />
@@ -79,7 +79,83 @@
       <p>No schedule found for {{ name.title() }}</p>
       {% endif %}
 
+    </section> -->
+
+    <section id="find_schedule">
+      <h1>Find Your Schedule</h1>
+      <form method="post">
+        <input type="text" name="name" placeholder="Enter your name" required />
+        <button type="submit">Search</button>
+      </form>
+
+      {% if suggestions %}
+      <div class="suggestions">
+        <p>Did you mean:</p>
+        <ul>
+          {% for s in suggestions %}
+          <form method="POST" style="display:inline;">
+            <input type="hidden" name="name" value="{{ s }}">
+            <button class="name_button" type="submit">{{ s }}</button>
+          </form>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% if schedules_for_user %}
+      <h2>Schedule for {{ matched_name }}</h2>
+
+      {% for sched in schedules_for_user %}
+      {% set day = sched.day %}
+      {% set data = sched.data %}
+      {% set user_color = data.Color | default('#FFFFFF') %}
+
+      {% if schedules_for_user|length > 1 %}
+      <h3>{{ day }}</h3>
+      {% endif %}
+
+      <div class="schedule-container">
+        {% for key, value in data.items() %}
+        {% if key != 'Color' %}
+        <div class="schedule-box" style="
+              {% if data.Color == '#FFFFFF' %}
+                background: repeating-linear-gradient(
+                  45deg,
+                  #f8f8f8,
+                  #f8f8f8 10px,
+                  #ffffff 10px,
+                  #ffffff 20px
+                );
+                border: 2px solid #ccc;
+                border-left: 6px solid {{ user_color }};
+              {% else %}
+                border-left: 6px solid {{ user_color }};
+              {% endif %}
+            ">
+          <strong>{{ key }}</strong>
+          <span>{{ value }}</span>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endfor %}
+
+      {% elif name %}
+      <p>No schedule found for {{ name.title() }}</p>
+      {% endif %}
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     <section id="available_pdfs">
@@ -180,20 +256,20 @@
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
   <script>
-  // Load the audio
-  const clickSound = new Audio("{{ url_for('static', filename='sounds/click.mp3') }}");
+    // Load the audio
+    const clickSound = new Audio("{{ url_for('static', filename='sounds/click.mp3') }}");
 
-  // Attach sound to each nav link
-  document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".top-nav a").forEach(link => {
-      link.addEventListener("click", function () {
-        clickSound.currentTime = 0; // rewind to start
-        clickSound.volume = .3;
-        clickSound.play().catch(e => console.warn("Sound failed to play:", e));
+    // Attach sound to each nav link
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll(".top-nav a").forEach(link => {
+        link.addEventListener("click", function () {
+          clickSound.currentTime = 0; // rewind to start
+          clickSound.volume = .3;
+          clickSound.play().catch(e => console.warn("Sound failed to play:", e));
+        });
       });
     });
-  });
-</script>
+  </script>
 
 
 
