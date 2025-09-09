@@ -99,7 +99,8 @@ def index():
                             'red': '#e30004',
                             'dark green': '#459649',
                             'gold': '#9f8c6c',
-                            'silver': '#a9b9c9'
+                            'silver': '#a9b9c9',
+                            'pam':"#ff008c"
                         }.get(str(value).strip().lower(), value)
                     if isinstance(value, float) and value.is_integer():
                         value = int(value)
