@@ -89,11 +89,11 @@ def index():
                         value = {
                             'white': '#FFFFFF',
                             'black': '#000000',
-                            'dark pink': '#bf006e',
+                            'magenta': '#bf006e',
                             'light pink': '#ffcbf2',
                             'purple': '#5c32b2',
                             'blue': '#0093e1',
-                            'lime': '#a3e44b',
+                            'lime green': '#a3e44b',
                             'yellow': '#fde800',
                             'orange': '#ed6b01',
                             'red': '#e30004',
