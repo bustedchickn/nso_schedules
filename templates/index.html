@@ -115,6 +115,7 @@
           <h3>{{ pdf }}</h3>
           <div class="pdf-container">
             <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
+            
             <div class="pdf-controls">
               <button onclick="prevPage({{ loop.index }})">Previous</button>
               <span id="page-num-{{ loop.index }}">Page 1</span> /
@@ -184,27 +185,82 @@
   </script>
 
   {% for pdf in pdfs %}
-  <div style="display: none;" data-pdf-index="{{ loop.index }}" data-pdf-url="{{ url_for('pdfs', filename=pdf) }}">
-  </div>
-  {% endfor %}
+<div style="display: none;" 
+     data-pdf-index="{{ loop.index }}" 
+     data-pdf-url="{{ url_for('pdfs', filename=pdf) }}">
+</div>
+{% endfor %}
 
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-  <script>
-    // Load the audio
-    const clickSound = new Audio("{{ url_for('static', filename='sounds/click.mp3') }}");
+<script>
+  // Load the audio
+  const clickSound = new Audio("{{ url_for('static', filename='sounds/click.mp3') }}");
 
-    // Attach sound to each nav link
-    document.addEventListener("DOMContentLoaded", function () {
-      document.querySelectorAll(".top-nav a").forEach(link => {
-        link.addEventListener("click", function () {
-          clickSound.currentTime = 0; // rewind to start
-          clickSound.volume = .3;
-          clickSound.play().catch(e => console.warn("Sound failed to play:", e));
-        });
+  // Attach sound to each nav link
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".top-nav a").forEach(link => {
+      link.addEventListener("click", function () {
+        clickSound.currentTime = 0; // rewind to start
+        clickSound.volume = .3;
+        clickSound.play().catch(e => console.warn("Sound failed to play:", e));
       });
     });
-  </script>
+
+    // Load each PDF
+    document.querySelectorAll("[data-pdf-index]").forEach(el => {
+      const index = el.getAttribute("data-pdf-index");
+      const url = el.getAttribute("data-pdf-url");
+      loadPDF(url, index);
+    });
+  });
+
+  function loadPDF(url, index) {
+    const loadingTask = pdfjsLib.getDocument(url);
+    loadingTask.promise.then(function (pdf) {
+      const pageCount = pdf.numPages;
+      document.getElementById(`page-count-${index}`).textContent = pageCount;
+
+      // Hide controls if only one page
+      if (pageCount === 1) {
+        document.querySelector(`#pdf-canvas-${index}`)
+          .parentElement.querySelector('.pdf-controls')
+          .style.display = 'none';
+      }
+
+      // Render the first page
+      renderPage(1, pdf, index);
+    });
+  }
+
+  function renderPage(num, pdf, index) {
+    pdf.getPage(num).then(function (page) {
+      const canvas = document.getElementById(`pdf-canvas-${index}`);
+      const ctx = canvas.getContext("2d");
+      const viewport = page.getViewport({ scale: 1.5 });
+
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const renderContext = {
+        canvasContext: ctx,
+        viewport: viewport
+      };
+      page.render(renderContext);
+
+      document.getElementById(`page-num-${index}`).textContent = num;
+    });
+  }
+
+  function prevPage(index) {
+    // Add your own logic to track current page per PDF
+  }
+
+  function nextPage(index) {
+    // Add your own logic to track current page per PDF
+  }
+</script>
+
 
 
 
