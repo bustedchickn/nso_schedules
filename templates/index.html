@@ -5,146 +5,55 @@
   <meta charset="UTF-8" />
   <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Employee Schedule</title>
-  <!-- Google Font: Inter -->
+  <title>Employee Schedule</title> <!-- Google Font: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <!-- Link your external stylesheet -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <!-- PDF.js from CDN -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- PDF.js from CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  </script>
-
+  <script> pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; </script>
 </head>
 
 <body>
-  <nav class="top-nav">
-    <a href="#find_schedule">Schedule</a>
-    <a href="#available_pdfs">PDFs</a>
-    <a href="#checkin_code">Check-in Code</a>
-  </nav>
-
+  <nav class="top-nav"> <a href="#find_schedule">Schedule</a> <a href="#available_pdfs">PDFs</a> <a
+      href="#checkin_code">Check-in Code</a> </nav>
   <main class="content">
     <h5>Call Campus Security: <a href="tel:208-496-3000">(208)496-3000</a></h5>
-
     <section id="find_schedule">
       <h1>Find Your Schedule</h1>
-      <form method="post">
-        <input type="text" name="name" placeholder="Enter your name" required />
-        <button type="submit">Search</button>
-      </form>
-
-      {% if suggestions %}
-      <div class="suggestions">
+      <form method="post"> <input type="text" name="name" placeholder="Enter your name" required /> <button
+          type="submit">Search</button> </form> {% if suggestions %} <div class="suggestions">
         <p>Did you mean:</p>
-        <ul>
-          {% for s in suggestions %}
-          <form method="POST" style="display:inline;">
-            <input type="hidden" name="name" value="{{ s }}">
-            <button class="name_button" type="submit">{{ s }}</button>
-          </form>
-          {% endfor %}
-        </ul>
-      </div>
-      {% endif %}
-
-      {% if schedules_for_user %}
-      <h2>Schedule for {{ matched_name }}</h2>
-
-      {% for sched in schedules_for_user %}
-      {% set day = sched.day %}
-      {% set data = sched.data %}
-      {% set user_color = data.Color | default('#FFFFFF') %}
-
-      {% if schedules_for_user|length > 1 %}
-      <h3>{{ day }}</h3>
-      {% endif %}
-
-      <div class="schedule-container">
-        {% for key, value in data.items() %}
-        {% if key != 'Color' %}
-        <div class="schedule-box" style="
-              {% if data.Color == '#FFFFFF' %}
-                background: repeating-linear-gradient(
-                  45deg,
-                  #f8f8f8,
-                  #f8f8f8 10px,
-                  #ffffff 10px,
-                  #ffffff 20px
-                );
-                border: 2px solid #ccc;
-                border-left: 6px solid {{ user_color }};
-              {% else %}
-                border-left: 6px solid {{ user_color }};
-              {% endif %}
-            ">
-          <strong>{{ key }}</strong>
-          <span>{{ value }}</span>
-        </div>
-        {% endif %}
-        {% endfor %}
-      </div>
-      {% endfor %}
-
-      {% elif name %}
-      <p>No schedule found for {{ name.title() }}</p>
-      {% endif %}
+        <ul> {% for s in suggestions %} <form method="POST" style="display:inline;"> <input type="hidden" name="name"
+              value="{{ s }}"> <button class="name_button" type="submit">{{ s }}</button> </form> {% endfor %} </ul>
+      </div> {% endif %} {% if schedules_for_user %} <h2>Schedule for {{ matched_name }}</h2> {% for sched in
+      schedules_for_user %} {% set day = sched.day %} {% set data = sched.data %} {% set user_color = data.Color |
+      default('#FFFFFF') %} {% if schedules_for_user|length > 1 %} <h3>{{ day }}</h3> {% endif %} <div
+        class="schedule-container"> {% for key, value in data.items() %} {% if key != 'Color' %} <div
+          class="schedule-box"
+          style=" {% if data.Color == '#FFFFFF' %} background: repeating-linear-gradient( 45deg, #f8f8f8, #f8f8f8 10px, #ffffff 10px, #ffffff 20px ); border: 2px solid #ccc; border-left: 6px solid {{ user_color }}; {% else %} border-left: 6px solid {{ user_color }}; {% endif %} ">
+          <strong>{{ key }}</strong> <span>{{ value }}</span> </div> {% endif %} {% endfor %} </div> {% endfor %} {%
+      elif name %} <p>No schedule found for {{ name.title() }}</p> {% endif %}
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <section id="available_pdfs">
       <h2>Available PDFs</h2>
-      <ul class="pdf-list">
-        {% for pdf in pdfs %}
-        <li>
+      <ul class="pdf-list"> {% for pdf in pdfs %} <li>
           <h3>{{ pdf }}</h3>
-          <div class="pdf-container">
-            <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
-            
-            <div class="pdf-controls">
-              <button onclick="prevPage({{ loop.index }})">Previous</button>
-              <span id="page-num-{{ loop.index }}">Page 1</span> /
-              <span id="page-count-{{ loop.index }}"></span>
-              <button onclick="nextPage({{ loop.index }})">Next</button>
-
-              <!-- <button onclick="zoomIn({{ loop.index }})">Zoom In</button>
-            <button onclick="zoomOut({{ loop.index }})">Zoom Out</button> -->
+          <div class="pdf-container"> <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
+            <div class="pdf-controls"> <button onclick="prevPage({{ loop.index }})">Previous</button> <span
+                id="page-num-{{ loop.index }}">Page 1</span> / <span id="page-count-{{ loop.index }}"></span> <button
+                onclick="nextPage({{ loop.index }})">Next</button>
+              <!-- <button onclick="zoomIn({{ loop.index }})">Zoom In</button> <button onclick="zoomOut({{ loop.index }})">Zoom Out</button> -->
             </div>
           </div>
-        </li>
-        {% endfor %}
-
-      </ul>
+        </li> {% endfor %} </ul>
     </section>
-
     <section id="checkin_code">
-      <h2>Check-in Code</h2>
-      <img src="/static/checkin_code.png" alt="check-in qr code" style="max-width: 100%;">
-    </section>
-
-    <br>
-
-
-
-    <!-- Welcome Modal -->
+      <h2>Check-in Code</h2> <img src="/static/checkin_code.png" alt="check-in qr code" style="max-width: 100%;">
+    </section> <br> <!-- Welcome Modal -->
     <div id="welcomeModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
+      <div class="modal-content"> <span class="close">&times;</span>
         <h2>Purpose of New Student Orientation</h2>
         <p class="para">New Student Orientation (NSO) among other teams in the First-Year Experience department, helps
           new students build confidence, form meaningful connections, and access key resources- preparing them to thrive
@@ -154,121 +63,23 @@
           would become BYU-Idaho. This year we are excited to celebrate 25 years of BYU-Idaho. As students participate
           in a variety of NSO events, they will have the chance to celebrate the history of BYUI and learn how they can
           add to the legacy.</p>
-        <p class="para">We thank you for your contribution to New Student Orientation this year, this event wouldn't be possible without you!</p>
+        <p class="para">We thank you for your contribution to New Student Orientation this year, this event wouldn't be
+          possible without you!</p>
         <p>With gratitude,</p>
         <p>Cassi Devries, Talmage Kay, Seth Taylor, Rozlynn Evans, Kylie Jones, Millie Settle, Rachel Stansbury</p>
         <p>New Student Orientation Team</p>
         <p>BYU-Idaho</p>
-
-
       </div>
-    </div>
-
-
-    <!-- <a href="{{ url_for('welcome') }}">Read Mission Statement Again</a> -->
-
-    <a href="#" id="showWelcomeLink">Read Mission Statement Again</a>
-
-
-
+    </div> <!-- <a href="{{ url_for('welcome') }}">Read Mission Statement Again</a> --> <a href="#"
+      id="showWelcomeLink">Read Mission Statement Again</a>
   </main>
-
-
-
-
-  <footer class="footer">
-    <img src="{{ url_for('static', filename='fyebluelogo.png') }}" alt="byuilogo" class="byuilogo">
-  </footer>
-  <!-- Put these BEFORE your closing </body> -->
-  <script>
-    window.SHOW_WELCOME = {{ 'true' if show_welcome else 'false' }};
-  </script>
-
-  {% for pdf in pdfs %}
-<div style="display: none;" 
-     data-pdf-index="{{ loop.index }}" 
-     data-pdf-url="{{ url_for('pdfs', filename=pdf) }}">
-</div>
-{% endfor %}
-
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
-<script>
-  // Load the audio
-  const clickSound = new Audio("{{ url_for('static', filename='sounds/click.mp3') }}");
-
-  // Attach sound to each nav link
-  document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".top-nav a").forEach(link => {
-      link.addEventListener("click", function () {
-        clickSound.currentTime = 0; // rewind to start
-        clickSound.volume = .3;
-        clickSound.play().catch(e => console.warn("Sound failed to play:", e));
-      });
-    });
-
-    // Load each PDF
-    document.querySelectorAll("[data-pdf-index]").forEach(el => {
-      const index = el.getAttribute("data-pdf-index");
-      const url = el.getAttribute("data-pdf-url");
-      loadPDF(url, index);
-    });
-  });
-
-  function loadPDF(url, index) {
-    const loadingTask = pdfjsLib.getDocument(url);
-    loadingTask.promise.then(function (pdf) {
-      const pageCount = pdf.numPages;
-      document.getElementById(`page-count-${index}`).textContent = pageCount;
-
-      // Hide controls if only one page
-      if (pageCount === 1) {
-        document.querySelector(`#pdf-canvas-${index}`)
-          .parentElement.querySelector('.pdf-controls')
-          .style.display = 'none';
-      }
-
-      // Render the first page
-      renderPage(1, pdf, index);
-    });
-  }
-
-  function renderPage(num, pdf, index) {
-    pdf.getPage(num).then(function (page) {
-      const canvas = document.getElementById(`pdf-canvas-${index}`);
-      const ctx = canvas.getContext("2d");
-      const viewport = page.getViewport({ scale: 1.5 });
-
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-
-      const renderContext = {
-        canvasContext: ctx,
-        viewport: viewport
-      };
-      page.render(renderContext);
-
-      document.getElementById(`page-num-${index}`).textContent = num;
-    });
-  }
-
-  function prevPage(index) {
-    // Add your own logic to track current page per PDF
-  }
-
-  function nextPage(index) {
-    // Add your own logic to track current page per PDF
-  }
-</script>
-
-
-
-
-
-
-
-
-
+  <footer class="footer"> <img src="{{ url_for('static', filename='fyebluelogo.png') }}" alt="byuilogo"
+      class="byuilogo"> </footer> <!-- Put these BEFORE your closing </body> -->
+  <script> window.SHOW_WELCOME = {{ 'true' if show_welcome else 'false' }}; </script> {% for pdf in pdfs %} <div
+    style="display: none;" data-pdf-index="{{ loop.index }}" data-pdf-url="{{ url_for('pdfs', filename=pdf) }}"> </div>
+  {% endfor %}
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script> // Load the audio const clickSound = new Audio("{{ url_for('static', filename='sounds/click.mp3') }}"); // Attach sound to each nav link document.addEventListener("DOMContentLoaded", function () { document.querySelectorAll(".top-nav a").forEach(link => { link.addEventListener("click", function () { clickSound.currentTime = 0; // rewind to start clickSound.volume = .3; clickSound.play().catch(e => console.warn("Sound failed to play:", e)); }); }); }); </script>
 </body>
 
 </html>
