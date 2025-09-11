@@ -39,7 +39,7 @@
     <section id="available_pdfs">
       <h2>Available PDFs</h2>
       <ul class="pdf-list"> {% for pdf in pdfs %} <li>
-          <h3>{{ pdf }}</h3>
+          <h3>{{ pdf|replace('.pdf', '') }}</h3>
           <div class="pdf-container"> <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
             <div class="pdf-controls"> <button onclick="prevPage({{ loop.index }})">Previous</button> <span
                 id="page-num-{{ loop.index }}">Page 1</span> / <span id="page-count-{{ loop.index }}"></span> <button
