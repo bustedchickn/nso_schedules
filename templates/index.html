@@ -19,6 +19,9 @@
   <nav class="top-nav"> <a href="#find_schedule">Schedule</a> <a href="#available_pdfs">PDFs</a> <a
       href="#checkin_code">Check-in Code</a> </nav>
   <main class="content">
+    <h5>Read President Meredith's referenced talk here: <a
+        href="https://www.churchofjesuschrist.org/study/general-conference/2018/04/revelation-for-the-church-revelation-for-our-lives?lang=eng" target="_blank">Revelation
+        for the Church, Revelation for Our Lives</a></h5>
     <h5>Call Campus Security: <a href="tel:208-496-3000">(208)496-3000</a></h5>
     <section id="find_schedule">
       <h1>Find Your Schedule</h1>
@@ -33,7 +36,8 @@
         class="schedule-container"> {% for key, value in data.items() %} {% if key != 'Color' %} <div
           class="schedule-box"
           style=" {% if data.Color == '#FFFFFF' %} background: repeating-linear-gradient( 45deg, #f8f8f8, #f8f8f8 10px, #ffffff 10px, #ffffff 20px ); border: 2px solid #ccc; border-left: 6px solid {{ user_color }}; {% else %} border-left: 6px solid {{ user_color }}; {% endif %} ">
-          <strong>{{ key }}</strong> <span>{{ value }}</span> </div> {% endif %} {% endfor %} </div> {% endfor %} {%
+          <strong>{{ key }}</strong> <span>{{ value }}</span>
+        </div> {% endif %} {% endfor %} </div> {% endfor %} {%
       elif name %} <p>No schedule found for {{ name.title() }}</p> {% endif %}
     </section>
     <section id="available_pdfs">
