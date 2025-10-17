@@ -2,7 +2,69 @@ import os
 import sys
 sys.stdout.flush()
 from flask import Flask, render_template, request, send_from_directory, make_response
+from nfc_tracking import log_visit, fetch_logs, set_token_active, token_active, ADMIN_TOKEN
+from flask import jsonify, abort, make_response
 import pandas as pd
+
+
+import uuid
+from nfc_tracking import log_visit, fetch_logs, set_token_active, token_active, ADMIN_TOKEN
+
+@app.route("/log_client", methods=["POST"])
+def log_client():
+    try:
+        data = request.get_json() or {}
+    except Exception:
+        data = {}
+    # generate device id if not present
+    device_id = request.cookies.get("nfc_device_id") or str(uuid.uuid4())
+    # log visit with client_info
+    try:
+        log_visit(request, token=request.args.get("nfc") or None, device_id=device_id, client_info=data)
+    except Exception as e:
+        print("log_client error:", e)
+    resp = jsonify({"ok": True, "device_id": device_id})
+    # set cookie if not present
+    if not request.cookies.get("nfc_device_id"):
+        resp.set_cookie("nfc_device_id", device_id, max_age=60*60*24*365, samesite='Lax', path='/')
+    return resp
+
+# Simple admin view (protected by ADMIN_TOKEN in header 'X-Admin-Token')
+@app.route("/admin/nfc_logs")
+def admin_nfc_logs():
+    token = request.headers.get("X-Admin-Token") or request.args.get("admin_token")
+    if token != ADMIN_TOKEN:
+        return abort(401)
+    logs = fetch_logs(300)
+    # minimal HTML table - you can replace with a template later
+    rows = []
+    for r in logs:
+        ci = r.get("client_info") or {}
+        rows.append(f"<tr><td>{r.get('created_at')}</td><td>{r.get('token') or ''}</td><td>{r.get('ip')}</td><td>{r.get('country')}/{r.get('region')}</td><td>{r.get('user_agent')[:120]}</td><td>{ci}</td></tr>")
+    html = f"""
+    <html><head><title>NFC Logs</title></head><body>
+    <h1>NFC Usage Logs</h1>
+    <p>Protect this page. Use header X-Admin-Token or ?admin_token=...</p>
+    <table border="1" cellpadding="4"><thead><tr><th>Time</th><th>Token</th><th>IP</th><th>Geo</th><th>User-Agent</th><th>Client Info</th></tr></thead>
+    <tbody>{''.join(rows)}</tbody></table>
+    </body></html>
+    """
+    return html
+
+# Admin endpoints to toggle token active state
+@app.route("/admin/set_token", methods=["POST"])
+def admin_set_token():
+    token = request.args.get("token") or (request.get_json() or {}).get("token")
+    active = request.args.get("active")
+    admin_token = request.headers.get("X-Admin-Token") or request.args.get("admin_token")
+    if admin_token != ADMIN_TOKEN:
+        return abort(401)
+    if token is None:
+        return jsonify({"error":"missing token"}), 400
+    active_flag = True if str(active) in ['1','true','True','yes','y'] else False
+    set_token_active(token, active_flag)
+    return jsonify({"ok": True, "token": token, "active": active_flag})
+
 
 app = Flask(__name__)
 
@@ -40,6 +102,18 @@ def index():
     suggestions = []
     matched_name = None
     schedules_for_user = []
+
+    # -- LOG VISIT: try to capture token from query param if present (works if your tags include ?nfc=abc)
+    # Also read device cookie if available
+    token = request.args.get("nfc") or request.args.get("token")  # common query param names
+    device_id = request.cookies.get("nfc_device_id")
+    # We DO NOT block here — we just log.
+    try:
+        # client_info from JS may be posted separately to /log_client; pass None here
+        log_visit(request, token=token, device_id=device_id, client_info=None)
+    except Exception as e:
+        # don't break app if logging fails
+        print("Logging error:", e)
 
     all_schedules = get_schedules()
 

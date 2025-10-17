@@ -84,6 +84,43 @@
   {% endfor %}
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script> // Load the audio const clickSound = new Audio("{{ url_for('static', filename='sounds/click.mp3') }}"); // Attach sound to each nav link document.addEventListener("DOMContentLoaded", function () { document.querySelectorAll(".top-nav a").forEach(link => { link.addEventListener("click", function () { clickSound.currentTime = 0; // rewind to start clickSound.volume = .3; clickSound.play().catch(e => console.warn("Sound failed to play:", e)); }); }); }); </script>
+  <script>
+(async function(){
+  try {
+    // If you already set cookie (nfc_device_id) --> skip creating new binding
+    function getCookie(name){
+      const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)'); 
+      return v ? v.pop() : '';
+    }
+    const deviceCookie = getCookie('nfc_device_id');
+    const payload = {
+      ua: navigator.userAgent || null,
+      language: navigator.language || null,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
+      platform: navigator.platform || null,
+      hw_concurrency: navigator.hardwareConcurrency || null,
+      screen: { w: screen.width, h: screen.height },
+      cookieExists: !!deviceCookie,
+      url: location.pathname + location.search
+    };
+
+    const resp = await fetch('/log_client', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+
+    const data = await resp.json();
+    // server returns {device_id: '...'}. Set cookie if provided
+    if (data && data.device_id) {
+      document.cookie = `nfc_device_id=${data.device_id}; path=/; max-age=${60*60*24*365}; samesite=lax`;
+    }
+  } catch (e) {
+    // silent
+  }
+})();
+</script>
+
 </body>
 
 </html>
