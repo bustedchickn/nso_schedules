@@ -14,6 +14,26 @@ html {
   scroll-behavior: smooth;
 }
 
+section {
+  scroll-margin-top: 85px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .top-nav {
   position: fixed;
   top: 0;
@@ -88,6 +108,13 @@ form {
   margin-bottom: 2rem;
 }
 
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 /* Logo styling */
 .byuilogo {
   height: 60px;
@@ -117,9 +144,16 @@ button {
 }
 
 .name_button {
-  background-color: none;
+  background-color: transparent;
   color: #333;
 
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(0, 109, 182, 0.35);
+  outline-offset: 2px;
 }
 
 button:hover {
@@ -138,11 +172,14 @@ button:hover {
   position: fixed;
   z-index: 1000;
   left: 0; top: 0; right: 0; bottom: 0;
-  display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(0,0,0,0.4);
   padding: 1rem;
+}
+
+.modal.is-open {
+  display: flex;
 }
 
 .modal-content {
@@ -164,11 +201,18 @@ button:hover {
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
+  width: auto;
+  margin: 0;
+  padding: 0 0.25rem;
+  border: 0;
+  background: transparent;
+  line-height: 1;
 }
 
 .close:hover,
 .close:focus {
   color: black;
+  background: transparent;
 }
 
 
@@ -181,12 +225,24 @@ button:hover {
 .schedule-box {
   background-color: white;
   border: 1px solid #e0e0e0;
+  border-left-width: 6px;
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   opacity: 0; /* For fade in */
   transform: translateY(20px);
+}
+
+.schedule-box-white {
+  background: repeating-linear-gradient(
+    45deg,
+    #f8f8f8,
+    #f8f8f8 10px,
+    #ffffff 10px,
+    #ffffff 20px
+  );
+  border-color: #ccc;
 }
 
 .schedule-box:hover {
@@ -198,6 +254,22 @@ button:hover {
   display: block;
   margin-bottom: 0.5rem;
   color: #222;
+}
+
+.schedule-box span {
+  overflow-wrap: anywhere;
+}
+
+.suggestions ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.suggestions form {
+  margin-bottom: 0;
 }
 
 /* PDF list & links */
@@ -225,11 +297,20 @@ ul.pdf-list li a:hover {
   max-width: 600px;
 }
 
+.pdf-error {
+  color: #7a1f1f;
+}
+
 canvas {
   border: 1px solid #ccc;
   max-width: 100%;
   height: auto;
   display: block;
+}
+
+.checkin-code {
+  max-width: 100%;
+  height: auto;
 }
 
 /* PDF controls - Flex for buttons */
@@ -288,6 +369,15 @@ canvas {
   button {
     width: 100%;
     margin-top: 0.5rem;
+  }
+
+  .search-form {
+    display: block;
+  }
+
+  .name_button,
+  .close {
+    width: auto;
   }
   .pdf-controls button {
     flex: 1;

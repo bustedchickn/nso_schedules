@@ -5,60 +5,115 @@
   <meta charset="UTF-8" />
   <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Employee Schedule</title> <!-- Google Font: Inter -->
+  <title>Employee Schedule</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <!-- Link your external stylesheet -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- PDF.js from CDN -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script> pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; </script>
 </head>
 
 <body>
-  <nav class="top-nav"> <a href="#find_schedule">Schedule</a> <a href="#available_pdfs">PDFs</a> <a
-      href="#checkin_code">Check-in Code</a> </nav>
+  <nav class="top-nav" aria-label="Primary navigation">
+    <a href="#find_schedule">Schedule</a>
+    <a href="#available_pdfs">PDFs</a>
+    <a href="#checkin_code">Check-in Code</a>
+  </nav>
+
   <main class="content">
-    <!-- <h5>Read President Meredith's referenced talk here: <a
-        href="https://www.churchofjesuschrist.org/study/general-conference/2018/04/revelation-for-the-church-revelation-for-our-lives?lang=eng" target="_blank">Revelation
-        for the Church, Revelation for Our Lives</a></h5> -->
-    <h5>Call Campus Security: <a href="tel:208-496-3000">(208)496-3000</a></h5>
+    <h5>Call Campus Security: <a href="tel:+12084963000">(208) 496-3000</a></h5>
+
     <section id="find_schedule">
       <h1>Find Your Schedule</h1>
-      <form method="post"> <input type="text" name="name" placeholder="Enter your name" required /> <button
-          type="submit">Search</button> </form> {% if suggestions %} <div class="suggestions">
+
+      <form method="post" class="search-form">
+        <label class="visually-hidden" for="name">Name</label>
+        <input id="name" type="text" name="name" placeholder="Enter your name" value="{{ name or '' }}" required />
+        <button type="submit">Search</button>
+      </form>
+
+      {% if suggestions %}
+      <div class="suggestions" aria-live="polite">
         <p>Did you mean:</p>
-        <ul> {% for s in suggestions %} <form method="POST" style="display:inline;"> <input type="hidden" name="name"
-              value="{{ s }}"> <button class="name_button" type="submit">{{ s }}</button> </form> {% endfor %} </ul>
-      </div> {% endif %} {% if schedules_for_user %} <h2>Schedule for {{ matched_name }}</h2> {% for sched in
-      schedules_for_user %} {% set day = sched.day %} {% set data = sched.data %} {% set user_color = data.Color |
-      default('#FFFFFF') %} {% if schedules_for_user|length > 1 %} <h3>{{ day }}</h3> {% endif %} <div
-        class="schedule-container"> {% for key, value in data.items() %} {% if key != 'Color' %} <div
-          class="schedule-box"
-          style=" {% if data.Color == '#FFFFFF' %} background: repeating-linear-gradient( 45deg, #f8f8f8, #f8f8f8 10px, #ffffff 10px, #ffffff 20px ); border: 2px solid #ccc; border-left: 6px solid {{ user_color }}; {% else %} border-left: 6px solid {{ user_color }}; {% endif %} ">
-          <strong>{{ key }}</strong> <span>{{ value }}</span>
-        </div> {% endif %} {% endfor %} </div> {% endfor %} {%
-      elif name %} <p>No schedule found for {{ name.title() }}</p> {% endif %}
+        <ul>
+          {% for s in suggestions %}
+          <li>
+            <form method="POST">
+              <input type="hidden" name="name" value="{{ s }}" />
+              <button class="name_button" type="submit">{{ s }}</button>
+            </form>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% if schedules_for_user %}
+      <h2>Schedule for {{ matched_name }}</h2>
+      {% for sched in schedules_for_user %}
+      {% set day = sched.day %}
+      {% set data = sched.data %}
+      {% set user_color = data.Color | default('#FFFFFF') %}
+      {% if schedules_for_user|length > 1 %}
+      <h3>{{ day }}</h3>
+      {% endif %}
+      <div class="schedule-container">
+        {% for key, value in data.items() %}
+        {% if key != 'Color' %}
+        <div class="schedule-box{% if data.Color == '#FFFFFF' %} schedule-box-white{% endif %}"
+          style="border-left-color: {{ user_color }};">
+          <strong>{{ key }}</strong>
+          <span>{{ value }}</span>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endfor %}
+      {% elif name %}
+      <p>No schedule found for {{ name.title() }}</p>
+      {% endif %}
     </section>
+
     <section id="available_pdfs">
       <h2>Available PDFs</h2>
-      <ul class="pdf-list"> {% for pdf in pdfs %} <li>
+      {% if pdfs %}
+      <ul class="pdf-list">
+        {% for pdf in pdfs %}
+        <li>
           <h3>{{ pdf|replace('.pdf', '') }}</h3>
-          <div class="pdf-container"> <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
-            <div class="pdf-controls"> <button onclick="prevPage({{ loop.index }})">Previous</button> <span
-                id="page-num-{{ loop.index }}">Page 1</span> / <span id="page-count-{{ loop.index }}"></span> <button
-                onclick="nextPage({{ loop.index }})">Next</button>
-              <!-- <button onclick="zoomIn({{ loop.index }})">Zoom In</button> <button onclick="zoomOut({{ loop.index }})">Zoom Out</button> -->
+          <p><a href="{{ url_for('pdfs', filename=pdf) }}" target="_blank" rel="noopener">Open PDF</a></p>
+          <div class="pdf-container">
+            <canvas id="pdf-canvas-{{ loop.index }}"></canvas>
+            <p class="pdf-error" id="pdf-error-{{ loop.index }}" hidden>
+              Preview unavailable. Open the PDF instead.
+            </p>
+            <div class="pdf-controls" id="pdf-controls-{{ loop.index }}">
+              <button type="button" data-pdf-action="prev" data-pdf-index="{{ loop.index }}">Previous</button>
+              <span>
+                <span id="page-num-{{ loop.index }}">Page 1</span> /
+                <span id="page-count-{{ loop.index }}">0</span>
+              </span>
+              <button type="button" data-pdf-action="next" data-pdf-index="{{ loop.index }}">Next</button>
             </div>
           </div>
-        </li> {% endfor %} </ul>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No PDFs are available right now.</p>
+      {% endif %}
     </section>
+
     <section id="checkin_code">
-      <h2>Check-in Code</h2> <img src="/static/checkin_code.png" alt="check-in qr code" style="max-width: 100%;">
-    </section> <br> <!-- Welcome Modal -->
-    <div id="welcomeModal" class="modal">
-      <div class="modal-content"> <span class="close">&times;</span>
-        <h2>Purpose of New Student Orientation</h2>
+      <h2>Check-in Code</h2>
+      <img src="{{ url_for('static', filename='checkin_code.png') }}" alt="Check-in QR code" class="checkin-code" />
+    </section>
+
+    <div id="welcomeModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="welcome-title"
+      aria-hidden="true">
+      <div class="modal-content">
+        <button type="button" class="close" aria-label="Close">&times;</button>
+        <h2 id="welcome-title">Purpose of New Student Orientation</h2>
         <p class="para">New Student Orientation (NSO) among other teams in the First-Year Experience department, helps
           new students build confidence, form meaningful connections, and access key resources - preparing them to thrive
           in their first year. We envision every new student at BYU-Idaho feeling a deep sense of belonging, empowered
@@ -66,20 +121,28 @@
         <p class="para">We thank you for your contribution to New Student Orientation this year, this event wouldn't be
           possible without you!</p>
         <p>With gratitude,</p>
-        <p>Cassi Devries, Talmage Kay, Seth Taylor, Rozlynn Evans, Kylie Jones, Alexis Jasperson, Rachel Stansbury, Miriam Allen</p>
+        <p>Cassi Devries, Talmage Kay, Seth Taylor, Rozlynn Evans, Kylie Jones, Alexis Jasperson, Rachel Stansbury,
+          Miriam Allen</p>
         <p>New Student Orientation Team</p>
         <p>BYU-Idaho</p>
       </div>
-    </div> <!-- <a href="{{ url_for('welcome') }}">Read Mission Statement Again</a> --> <a href="#"
-      id="showWelcomeLink">Read Mission Statement Again</a>
+    </div>
+
+    <p><a href="#" id="showWelcomeLink">Read Mission Statement Again</a></p>
   </main>
-  <footer class="footer"> <img src="{{ url_for('static', filename='fyebluelogo.png') }}" alt="byuilogo"
-      class="byuilogo"> </footer> <!-- Put these BEFORE your closing </body> -->
-  <script> window.SHOW_WELCOME = {{ 'true' if show_welcome else 'false' }}; </script> {% for pdf in pdfs %} <div
-    style="display: none;" data-pdf-index="{{ loop.index }}" data-pdf-url="{{ url_for('pdfs', filename=pdf) }}"> </div>
+
+  <footer class="footer">
+    <img src="{{ url_for('static', filename='fyebluelogo.png') }}" alt="BYU-Idaho logo" class="byuilogo" />
+  </footer>
+
+  <script>
+    window.SHOW_WELCOME = {{ 'true' if show_welcome else 'false' }};
+    window.CLICK_SOUND_URL = "{{ url_for('static', filename='sounds/click.mp3') }}";
+  </script>
+  {% for pdf in pdfs %}
+  <div hidden data-pdf-index="{{ loop.index }}" data-pdf-url="{{ url_for('pdfs', filename=pdf) }}"></div>
   {% endfor %}
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-  <script> // Load the audio const clickSound = new Audio("{{ url_for('static', filename='sounds/click.mp3') }}"); // Attach sound to each nav link document.addEventListener("DOMContentLoaded", function () { document.querySelectorAll(".top-nav a").forEach(link => { link.addEventListener("click", function () { clickSound.currentTime = 0; // rewind to start clickSound.volume = .3; clickSound.play().catch(e => console.warn("Sound failed to play:", e)); }); }); }); </script>
 </body>
 
 </html>
