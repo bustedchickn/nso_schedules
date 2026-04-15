@@ -12,6 +12,7 @@ html, body {
 }
 html {
   scroll-behavior: smooth;
+  cursor: url("/static/cursor.cur"), auto;
 }
 
 @media (hover: hover) and (pointer: fine) {
