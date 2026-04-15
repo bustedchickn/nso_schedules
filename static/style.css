@@ -14,6 +14,25 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  html,
+  body {
+    cursor: url("/static/cursor.cur"), auto;
+  }
+
+  a,
+  button,
+  input[type="submit"],
+  input[type="button"],
+  label[for],
+  summary,
+  [role="button"],
+  [data-pdf-action],
+  canvas {
+    cursor: url("/static/opencursor.cur"), pointer;
+  }
+}
+
 section {
   scroll-margin-top: 85px;
 }
@@ -139,7 +158,6 @@ button {
   background-color: rgb(0, 109, 182);
   color: white;
   border-radius: 6px;
-  cursor: pointer;
   transition: background 0.2s ease;
 }
 
@@ -200,7 +218,6 @@ button:hover {
   float: right;
   font-size: 28px;
   font-weight: bold;
-  cursor: pointer;
   width: auto;
   margin: 0;
   padding: 0 0.25rem;
