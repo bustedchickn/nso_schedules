@@ -17,19 +17,20 @@ html {
 
 @media (hover: hover) and (pointer: fine) {
   html,
-  body {
+  body,
+  body * {
     cursor: url("/static/cursor.cur"), auto;
   }
 
-  a,
-  button,
-  input[type="submit"],
-  input[type="button"],
-  label[for],
-  summary,
-  [role="button"],
-  [data-pdf-action],
-  canvas {
+  a:hover,
+  button:hover,
+  input[type="submit"]:hover,
+  input[type="button"]:hover,
+  label[for]:hover,
+  summary:hover,
+  [role="button"]:hover,
+  [data-pdf-action]:hover,
+  canvas:hover {
     cursor: url("/static/opencursor.cur"), pointer;
   }
 }
